@@ -1,0 +1,604 @@
+@(title:String, uid:String, sid:String)
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>@title</title>
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+<link type="text/css" href="public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+<script type="text/javascript" src="public/javascripts/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="public/javascripts/jquery.json-2.3.min.js"></script>
+<style>
+.survey ul { list-style-type: none; margin: 0; padding: 0; margin-bottom: 10px; }
+.survey li { margin: 5px; padding: 5px; width: 180px; }
+.survey li span { vertical-align: middle; display: inline-block; }
+</style>
+<script>
+$(function() {
+  // フォーム用JSON配列定義
+  var fjarr = [];
+
+  /*
+   * 画面初期化
+   */
+  // 回答ソート設定
+  $( "#survey_0" ).sortable();
+	$( "ul, li" ).disableSelection();
+  // 確定表示部を非表示
+  $('div.menu_0').css('display', 'none');
+
+  /*
+   * アンケートデータ取得
+   */
+  $.get('@action(controllers.Application.load)', {
+    'uid': @uid,
+    'sid': @sid
+  }, function(data) {
+    var ids = data._id;
+    $('#_id').val(ids._time.toString(16)+ids._machine.toString(16)+ids._inc.toString(16));
+    $('#uid').val(data.uid);
+    $('#sid').val(data.survey_id);
+    $('#caption').val(data.caption);
+    $('#caption_desc').val(data.caption_desc);
+    for (var i in data.fjson) {
+      fjarr[i] = {};
+      fjarr[i]['question'] = data.fjson[i].question;
+      fjarr[i]['desc'] = data.fjson[i].desc;
+      fjarr[i]['optype'] = data.fjson[i].optype;
+      fjarr[i]['answer'] = data.fjson[i].answer;
+      // 質問フォームを追加
+      if (i>0) {
+        var surv = $('div.survey_m').clone();
+        surv.removeAttr('style');
+        surv.addClass('survey');
+        surv.removeClass('survey_m');
+        surv
+          .find('div.menu_')
+            .find('#edit')
+              .attr('name', 'edit_'+i)
+              .end()
+            .addClass('menu_'+i)
+            .removeClass('menu_')
+        ;
+      surv
+        .find('div.ee_')
+          .find('ul#question_')
+            .find('#qtext_')
+              .attr('id', 'qtext_'+i)
+              .end()
+            .find('#qdesc_')
+              .attr('id', 'qdesc_'+i)
+              .end()
+            .find('#opt')
+              .addClass('opt_'+i)
+              .attr('name', 'opt_'+i)
+              .end()
+            .attr('id', 'question_'+i)
+            .end()
+          .find('div#rtext_')
+            .find('ul#survey_')
+              .find(':radio')
+                .attr('name', 'radio_'+i)
+                .end()
+              .find(':text')
+                .attr('id', 'rtext_'+i+'_0')
+                .attr('name', 'rtext_'+i+'_0')
+                .end()
+              .attr('id', 'survey_'+i)
+              .end()
+            .find('#rtext_m')
+              .attr('name', 'radio_m_'+i)
+              .end()
+            .attr('id', 'rtext_'+i)
+            .end()
+          .find('div#ctext_')
+            .find('ul#survey_')
+              .find(':checkbox')
+                .attr('name', 'checkbox_'+i+'_0')
+                .end()
+              .find(':text')
+                .attr('id', 'ctext_'+i+'_0')
+                .attr('name', 'ctext_'+i+'_0')
+                .end()
+              .attr('id', 'survey_'+i)
+              .end()
+            .find('#ctext_m')
+              .attr('name', 'check_m_'+i)
+              .end()
+            .attr('id', 'ctext_'+i)
+            .end()
+          .find('#fixed')
+            .attr('name', 'fixed_'+i)
+            .end()
+          .addClass('ee_'+i)
+          .removeClass('ee_')
+      ;
+      surv.appendTo('#content');
+      }
+      $( "#survey_"+i ).sortable();
+      // 確定した「質問」「回答」を格納するフォームを追加
+      $('div.menu_'+i).append('<form class="fix_'+i+'">');
+      var q = data.fjson[i].question;
+      var qdesc = data.fjson[i].desc;
+      var opt = data.fjson[i].optype;
+      $('form.fix_'+i).append('質問：'+q+'<br>');
+      $('form.fix_'+i).append('説明：'+qdesc+'<br>');
+      $('ul#question_'+i+' #qtext_'+i).val(q);
+      $('ul#question_'+i+' #qdesc_'+i).val(qdesc);
+      $('.opt_'+i).val(opt);
+      var ans = data.fjson[i].answer; // 回答欄用の配列
+      for (var j in ans) {
+        if (j==0) {
+          $('ul#survey_'+i+'.s_radio #rtext_'+i+'_0').val(ans[j].option);
+          $('ul#survey_'+i+'.s_checkbox #ctext_'+i+'_0').val(ans[j].option);
+        } else {
+          // 項目追加用コピーを作成、id削除、class変更
+          var tmp = $('div#rtext_'+i+' li#draggable.s_radio').clone();
+          tmp.removeAttr('id');
+          tmp.removeClass('ui-state-highlight');
+          tmp.removeClass('ui-draggable');
+          tmp.removeClass('s_radio');
+          tmp.addClass('ui-state-default');
+          // 追加用コピーのラジオボタンから、id削除、既存のラジオボタンと同じ名前を付ける
+          var rdo = tmp.find(':radio');
+          rdo.removeAttr('id');
+          rdo.attr('name', 'radio_'+i);
+          // 追加用コピーのテキストボックスから、id、読み取り専用、値を削除、名前を付ける
+          var txt = tmp.find(':text');
+//              txt.removeAttr('id');
+          txt.removeAttr('readonly');
+          txt.attr('id', 'rtext_'+i+'_'+j);
+          txt.attr('name', 'rtext_'+i+'_'+j);
+          $(txt).val(ans[j].option);
+          tmp.find('span').removeAttr('style');
+          // 選択肢に追加
+          tmp.appendTo('ul#survey_'+i+'.s_radio');
+          
+          // 項目追加用コピーを作成、id削除、class変更
+          var ctmp = $('div#ctext_'+i+' li#draggable.s_checkbox').clone();
+          ctmp.removeAttr('id');
+          ctmp.removeClass('ui-state-highlight');
+          ctmp.removeClass('ui-draggable');
+          ctmp.removeClass('s_checkbox');
+          ctmp.addClass('ui-state-default');
+          // 追加用コピーのラジオボタンから、id削除、既存のラジオボタンと同じ名前を付ける
+          var cbx = ctmp.find(':checkbox');
+          cbx.removeAttr('id');
+          cbx.attr('name', 'check_'+i+'_'+j);
+          // 追加用コピーのテキストボックスから、id、読み取り専用、値を削除、名前を付ける
+          var ctxt = ctmp.find(':text');
+//              txt.removeAttr('id');
+          ctxt.removeAttr('readonly');
+          ctxt.attr('id', 'ctext_'+i+'_'+j);
+          ctxt.attr('name', 'ctext_'+i+'_'+j);
+          $(ctxt).val(ans[j].option);
+          ctmp.find('span').removeAttr('style');
+          // 選択肢に追加
+          ctmp.appendTo('ul#survey_'+i+'.s_checkbox');
+        }
+        switch (opt) {
+          case 'rtext':
+            $('<input>', { type: 'radio', name: 'radio_'+i, val: ans[j].option }).appendTo('form.fix_'+i);
+            $('form.fix_'+i).append(' '+ans[j].option+'<br>');
+            break;
+          case 'ctext':
+            $('<input>', { type: 'checkbox', name: 'check_'+i+'_'+j, val: ans[j].option }).appendTo('form.fix_'+i);
+            $('form.fix_'+i).append(' '+ans[j].option+'<br>');
+            break;
+        }
+      }
+      switch (opt) {
+      case "rtext": // ラジオボタン
+        $('#rtext_'+i).css('display', 'block');
+        $('#ctext_'+i).css('display', 'none');
+        break;
+      case "ctext": // チェックボックス
+        $('#rtext_'+i).css('display', 'none');
+        $('#ctext_'+i).css('display', 'block');
+        break;
+      }
+      $('div.menu_'+i).css('display', 'block');
+      // 編集用部分を非表示
+      $('div.ee_'+i).css('display', 'none');
+    } // for (var i in data.fjson)
+    $('#fjson').val($.toJSON(fjarr));
+  });
+
+  // キャンセル->管理画面に戻る
+  $("#cancel").click(function() {
+    $('#main').attr('action', '@action(controllers.Application.cancel)');
+    $('#main').submit();
+  });
+
+  // 「質問の追加」ボタンクリック
+  $("#add_q").click(function() {
+    var i = fjarr.length
+        var surv = $('div.survey_m').clone();
+        surv.removeAttr('style');
+        surv.addClass('survey');
+        surv.removeClass('survey_m');
+        surv
+          .find('div.menu_')
+            .find('#edit')
+              .attr('name', 'edit_'+i)
+              .end()
+            .addClass('menu_'+i)
+            .removeClass('menu_')
+        ;
+      surv
+        .find('div.ee_')
+          .find('ul#question_')
+            .find('#qtext_')
+              .attr('id', 'qtext_'+i)
+              .end()
+            .find('#qdesc_')
+              .attr('id', 'qdesc_'+i)
+              .end()
+            .find('#opt')
+              .addClass('opt_'+i)
+              .attr('name', 'opt_'+i)
+              .end()
+            .attr('id', 'question_'+i)
+            .end()
+          .find('div#rtext_')
+            .find('ul#survey_')
+              .find(':radio')
+                .attr('name', 'radio_'+i)
+                .end()
+              .find(':text')
+                .attr('id', 'rtext_'+i+'_0')
+                .attr('name', 'rtext_'+i+'_0')
+                .end()
+              .attr('id', 'survey_'+i)
+              .end()
+            .find('#rtext_m')
+              .attr('name', 'radio_m_'+i)
+              .end()
+            .attr('id', 'rtext_'+i)
+            .end()
+          .find('div#ctext_')
+            .find('ul#survey_')
+              .find(':checkbox')
+                .attr('name', 'checkbox_'+i+'_0')
+                .end()
+              .find(':text')
+                .attr('id', 'ctext_'+i+'_0')
+                .attr('name', 'ctext_'+i+'_0')
+                .end()
+              .attr('id', 'survey_'+i)
+              .end()
+            .find('#ctext_m')
+              .attr('name', 'check_m_'+i)
+              .end()
+            .attr('id', 'ctext_'+i)
+            .end()
+          .find('#fixed')
+            .attr('name', 'fixed_'+i)
+            .end()
+          .addClass('ee_'+i)
+          .removeClass('ee_')
+      ;
+      surv.appendTo('#content');
+  });
+
+  // ラジオボタンの項目追加
+  $("#rtext_m").live('click', function() {
+    // GroupID 取得
+    var gid = (this.name).replace('radio_m_','');
+    // 項目追加用コピーを作成、id削除、class変更
+    var tmp = $('div#rtext_'+gid+' li#draggable.s_radio').clone();
+    tmp.removeAttr('id');
+    tmp.removeClass('ui-state-highlight');
+    tmp.removeClass('ui-draggable');
+    tmp.addClass('ui-state-default');
+    // 既存のラジオボタン群を取得
+    var ext_rdo = $('ul#survey_'+gid+'.s_radio :radio');
+    // 追加用コピーのラジオボタンから、id削除、既存のラジオボタンと同じ名前を付ける
+    var rdo = tmp.find(':radio');
+    rdo.removeAttr('id');
+    rdo.attr('name', ext_rdo.attr('name'));
+    // 既存のテキストボックス群を取得
+    var ext_txt = $('ul#survey_'+gid+'.s_radio :text');
+    // 追加用コピーのテキストボックスから、id、読み取り専用、値を削除、名前を付ける
+    var txt = tmp.find(':text');
+    txt.removeAttr('id');
+    txt.removeAttr('readonly');
+    txt.removeAttr('value');
+    txt.attr('name', 'rtext_'+gid+'_'+ext_txt.length);
+    tmp.find('span').removeAttr('style');
+    // 選択肢に追加
+    tmp.appendTo('ul#survey_'+gid+'.s_radio');
+    /*
+    // 項目追加用コピーを作成、id削除、class変更
+    var tmp = $('div#ctext_'+gid+' li#draggable.s_checkbox').clone();
+    tmp.removeAttr('id');
+    tmp.removeClass('ui-state-highlight');
+    tmp.removeClass('ui-draggable');
+    tmp.removeClass('s_checkbox');
+    tmp.addClass('ui-state-default');
+    // 既存のラジオボタン群を取得
+//    var ext_rdo = $('ul#survey_'+gid+'.s_radio :radio');
+    // 追加用コピーのラジオボタンから、id削除、既存のラジオボタンと同じ名前を付ける
+    var cbx = tmp.find(':checkbox');
+    cbx.removeAttr('id');
+//    rdo.attr('name', ext_rdo.attr('name'));
+    // 既存のテキストボックス群を取得
+    var ext_txt = $('ul#survey_'+gid+'.s_checkbox :text');
+    // 追加用コピーのテキストボックスから、id、読み取り専用、値を削除、名前を付ける
+    var txt = tmp.find(':text');
+    txt.removeAttr('id');
+    txt.removeAttr('readonly');
+    txt.removeAttr('value');
+    txt.attr('name', 'ctext_'+gid+'_'+ext_txt.length);
+    // 選択肢に追加
+    tmp.appendTo('ul#survey_'+gid+'.s_checkbox');
+    */
+  });
+
+  // チェックボックスの項目追加
+  $("#ctext_m").live('click', function() {
+    // GroupID 取得
+    var gid = (this.name).replace('check_m_','');
+    // 項目追加用コピーを作成、id削除、class変更
+    var tmp = $('div#ctext_'+gid+' li#draggable.s_checkbox').clone();
+    tmp.removeAttr('id');
+    tmp.removeClass('ui-state-highlight');
+    tmp.removeClass('ui-draggable');
+    tmp.removeClass('s_checkbox');
+    tmp.addClass('ui-state-default');
+    // 既存のラジオボタン群を取得
+//    var ext_rdo = $('ul#survey_'+gid+'.s_radio :radio');
+    // 追加用コピーのラジオボタンから、id削除、既存のラジオボタンと同じ名前を付ける
+    var cbx = tmp.find(':checkbox');
+    cbx.removeAttr('id');
+//    rdo.attr('name', ext_rdo.attr('name'));
+    // 既存のテキストボックス群を取得
+    var ext_txt = $('ul#survey_'+gid+'.s_checkbox :text');
+    // 追加用コピーのテキストボックスから、id、読み取り専用、値を削除、名前を付ける
+    var txt = tmp.find(':text');
+    txt.removeAttr('id');
+    txt.removeAttr('readonly');
+    txt.removeAttr('value');
+    txt.attr('name', 'ctext_'+gid+'_'+ext_txt.length);
+    tmp.find('span').removeAttr('style');
+    // 選択肢に追加
+    tmp.appendTo('ul#survey_'+gid+'.s_checkbox');
+    /*
+    var tmp = $('div#rtext_'+gid+' li#draggable.s_radio').clone();
+    tmp.removeAttr('id');
+    tmp.removeClass('ui-state-highlight');
+    tmp.removeClass('ui-draggable');
+    tmp.addClass('ui-state-default');
+    // 既存のラジオボタン群を取得
+    var ext_rdo = $('ul#survey_'+gid+'.s_radio :radio');
+    // 追加用コピーのラジオボタンから、id削除、既存のラジオボタンと同じ名前を付ける
+    var rdo = tmp.find(':radio');
+    rdo.removeAttr('id');
+    rdo.attr('name', ext_rdo.attr('name'));
+    // 既存のテキストボックス群を取得
+    var ext_txt = $('ul#survey_'+gid+'.s_radio :text');
+    // 追加用コピーのテキストボックスから、id、読み取り専用、値を削除、名前を付ける
+    var txt = tmp.find(':text');
+    txt.removeAttr('id');
+    txt.removeAttr('readonly');
+    txt.removeAttr('value');
+    txt.attr('name', 'rtext_'+gid+'_'+ext_txt.length);
+    // 選択肢に追加
+    tmp.appendTo('ul#survey_'+gid+'.s_radio');
+    */
+  });
+
+  // 質問「編集」ボタンクリック
+  $("#edit").live('click', function() {
+    var gid = (this.name).replace('edit_','');
+    $('form.fix_'+gid).remove();
+    $('div.menu_'+gid).css('display', 'none');
+    $('div.ee_'+gid).css('display', 'block');
+  });
+
+  // 回答方法選択
+  $("#opt").live('change', function() {
+    // GroupID 取得
+    var gid = (this.name).replace('opt_','');
+    switch (this.value) {
+      case "rtext": // ラジオボタン
+        $('#rtext_'+gid).css('display', 'block');
+        $('#ctext_'+gid).css('display', 'none');
+        break;
+      case "ctext": // チェックボックス
+        $('#rtext_'+gid).css('display', 'none');
+        $('#ctext_'+gid).css('display', 'block');
+        break;
+    }
+  });
+
+  /*
+   * 質問編集「完了」ボタンクリック
+   */
+  $("#fixed").live('click', function() {
+    // ボタンの名前から GroupID を取得
+    var gid = eval((this.name).replace('fixed_',''));
+    // 編集用部分を非表示
+    $('div.ee_'+gid).css('display', 'none');
+    // 確定した「質問」「回答」を格納するフォームを追加
+    $('div.menu_'+gid).append('<form class="fix_'+gid+'">');
+    var q = $('ul#question_'+gid+' #qtext_'+gid).val();
+    var qdesc = $('ul#question_'+gid+' #qdesc_'+gid).val();
+    $('form.fix_'+gid).append('質問：'+q+'<br>');
+    $('form.fix_'+gid).append('説明：'+qdesc+'<br>');
+    var ans = []; // 回答欄用の配列
+    var opt = $('.opt_'+gid).val();
+    switch (opt) {
+      case 'rtext':
+        var txt = $('div#rtext_'+gid+' ul#survey_'+gid+'.s_radio :text').serializeArray();
+        $.each(txt, function(i, v) {
+          var optxt = {};
+          optxt['option'] = v.value;
+          ans[i] = optxt;
+          $('<input>', { type: 'radio', name: 'radio_'+gid, val: v.value }).appendTo('form.fix_'+gid);
+          $('form.fix_'+gid).append(' '+v.value+'<br>');
+        });
+        break;
+      case 'ctext':
+        var txt = $('div#ctext_'+gid+' ul#survey_'+gid+'.s_checkbox :text').serializeArray();
+        $.each(txt, function(i, v) {
+          var optxt = {};
+          optxt['option'] = v.value;
+          ans[i] = optxt;
+          $('<input>', { type: 'checkbox', name: 'check_'+gid+'_'+i, val: v.value }).appendTo('form.fix_'+gid);
+          $('form.fix_'+gid).append(' '+v.value+'<br>');
+        });
+        break;
+    }
+    $('div.menu_'+gid).css('display', 'block');
+    fjarr[gid] = {};
+    fjarr[gid]['question'] = q;
+    fjarr[gid]['desc'] = qdesc;
+    fjarr[gid]['optype'] = opt;
+    fjarr[gid]['answer'] = ans;
+    $('#fjson').val($.toJSON(fjarr));
+  });
+  
+  $('.ui-icon-circle-close').live('click', function() {
+    $(this).parent().remove();
+  });
+
+  $('.ui-icon-circle-close').live('hover', function(e) {
+    if ( e.type == 'mouseenter' ) {
+      $(this).addClass('ui-state-hover');
+    } else {
+      $(this).removeClass('ui-state-hover');
+    }
+  });
+});
+</script>
+
+</head>
+<body>
+<section id="content">
+
+<header>
+  <form id="main" action="@action(controllers.Application.save)" method="POST">
+    <input type="submit" id="save" value="保存" />
+    <input type="button" id="cancel" value="キャンセル" />
+    <input type="hidden" id="_id" name="_id" />
+    <input type="hidden" id="uid" name="uid" value="@uid" />
+    <input type="hidden" id="sid" name="sid" value="@sid" />
+    <input type="hidden" id="fjson" name="fjson" />
+    <p>アンケート名：<input type="text" id="caption" name="caption" /></p>
+    <p>アンケートの説明：<input type="text" id="caption_desc" name="caption_desc" /></p>
+  </form>
+  <input type="button" id="add_q" value="質問の追加" />
+</header>
+
+<div class="survey">
+  <div class="ee_menu menu_0">
+    <input type="button" id="edit" name="edit_0" value="編集" />
+  </div><!-- div.menu_0 -->
+  <div class="ee_0">
+    <ul id="question_0">
+      <li>質問： <input type="text" id="qtext_0" /></li>
+      <li>説明： <input type="text" id="qdesc_0" /></li>
+      <li>
+        <select id="opt" class="opt_0" name="opt_0">
+          <option value="rtext">ラジオボタン</option>
+          <option value="ctext">チェックボックス</option>
+        </select>
+      </li>
+    </ul><!-- ul#question_gid -->
+    <div id="rtext_0">
+      <ul id="survey_0" class="ui-sortable s_radio">
+      	<li class="ui-state-default">
+          <input type="radio" name="radio_0" disabled="disabled" />
+          <input type="text" id="rtext_0_0" name="rtext_0_0" />
+          <span class="ui-icon ui-icon-circle-close"></span>
+        </li><!-- li.ui-state-default -->
+      </ul><!-- ul#survey_gid.s_radio -->
+      <ul>
+  	    <li id="draggable" class="ui-state-highlight ui-draggable s_radio">
+          <input type="radio" id="radio_m" disabled="disabled" />
+          <input type="text" id="rtext_m" name="radio_m_0" value="Click me to add" readonly="readonly" />
+          <span class="ui-icon ui-icon-circle-close" style="display: none;"></span>
+        </li>
+      </ul>
+    </div><!-- div#rtext_0 -->
+    <div id="ctext_0" style="display: none;">
+      <ul id="survey_0" class="ui-sortable s_checkbox">
+      	<li class="ui-state-default">
+          <input type="checkbox" name="checkbox_0" disabled="disabled" />
+          <input type="text" id="ctext_0_0" name="ctext_0_0" />
+          <span class="ui-icon ui-icon-circle-close"></span>
+        </li><!-- li.ui-state-default -->
+      </ul><!-- ul#survey_0 -->
+      <ul>
+        <li id="draggable" class="ui-state-highlight ui-draggable s_checkbox">
+          <input type="checkbox" id="checkbox_m" disabled="disabled" />
+          <input type="text" id="ctext_m" name="check_m_0" value="Click me to add" readonly="readonly" />
+          <span class="ui-icon ui-icon-circle-close" style="display: none;"></span>
+        </li><!-- li#draggable -->
+      </ul>
+    </div><!-- div#ctext_0 -->
+    <input type="button" id="fixed" name="fixed_0" value="完了" />
+  </div><!-- div.ee_0 -->
+</div><!-- div#survey -->
+</section><!-- section#content -->
+
+<footer>
+<div class="survey_m" style="display: none;">
+  <div class="ee_menu menu_">
+    <input type="button" id="edit" name="edit_" value="編集" />
+  </div><!-- div.menu_ -->
+  <div class="ee_">
+    <ul id="question_">
+      <li>質問： <input type="text" id="qtext_" /></li>
+      <li>説明： <input type="text" id="qdesc_" /></li>
+      <li>
+        <select id="opt">
+          <option value="rtext">ラジオボタン</option>
+          <option value="ctext">チェックボックス</option>
+        </select>
+      </li>
+    </ul><!-- ul#question_ -->
+    <div id="rtext_">
+      <ul id="survey_" class="ui-sortable s_radio">
+      	<li class="ui-state-default">
+          <input type="radio" name="radio_" disabled="disabled" />
+          <input type="text" name="rtext__" />
+          <span class="ui-icon ui-icon-circle-close"></span>
+        </li><!-- li.ui-state-default -->
+      </ul><!-- ul#survey_.s_radio -->
+      <ul>
+  	    <li id="draggable" class="ui-state-highlight ui-draggable s_radio">
+          <input type="radio" id="radio_m" disabled="disabled" />
+          <input type="text" id="rtext_m" name="radio_m_" value="Click me to add" readonly="readonly" />
+          <span class="ui-icon ui-icon-circle-close" style="display: none;"></span>
+        </li>
+      </ul>
+    </div><!-- div#rtext_ -->
+    <div id="ctext_" style="display: none;">
+      <ul id="survey_" class="ui-sortable s_checkbox">
+      	<li class="ui-state-default">
+          <input type="checkbox" name="checkbox_" disabled="disabled" />
+          <input type="text" name="ctext__" />
+          <span class="ui-icon ui-icon-circle-close"></span>
+        </li><!-- li.ui-state-default -->
+      </ul><!-- ul#survey_ -->
+      <ul>
+        <li id="draggable" class="ui-state-highlight ui-draggable s_checkbox">
+          <input type="checkbox" id="checkbox_m" disabled="disabled" />
+          <input type="text" id="ctext_m" name="check_m_0" value="Click me to add" readonly="readonly" />
+          <span class="ui-icon ui-icon-circle-close" style="display: none;"></span>
+        </li><!-- li#draggable -->
+      </ul>
+    </div><!-- div#ctext_ -->
+    <input type="button" id="fixed" name="fixed_" value="完了" />
+  </div><!-- div.ee_ -->
+</div><!-- div#survey_m -->
+  <p id="result"></p>
+</footer>
+
+</body>
+</html>

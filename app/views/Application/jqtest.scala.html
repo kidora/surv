@@ -1,0 +1,145 @@
+@(title:String)
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>@title</title>
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+<link type="text/css" href="public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+<script type="text/javascript" src="public/javascripts/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<style>
+/* Sortable test
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+#sortable li span { position: absolute; margin-left: -1.3em; }
+*/
+.survey ul { list-style-type: none; margin: 0; padding: 0; margin-bottom: 10px; }
+.survey li { margin: 5px; padding: 5px; width: 150px; }
+</style>
+<script>
+$(function() {
+  /* date picker (from quick start)
+  $("#date").datepicker();
+  */
+  /* Sortable test
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+  */
+  var i=0;
+  $( "#survey_"+i ).sortable();
+  /*
+	$( "#sortable" ).sortable({
+		revert: true
+	});
+	$( "#draggable" ).draggable({
+		connectToSortable: "#sortable",
+		helper: "clone",
+		revert: "invalid"
+	});
+  */
+	$( "ul, li" ).disableSelection();
+
+  $('div.menu_0').css('display', 'none');
+
+  $( "#rtext_m" ).click(function() {
+    var tmp = $( "li#draggable" ).clone();
+    tmp.removeAttr('id');
+    tmp.removeClass('ui-state-highlight');
+    tmp.removeClass('ui-draggable');
+    tmp.addClass('ui-state-default');
+    var ext_rdo = $("ul#survey_0").find('input:radio');
+    var rdo = tmp.find('input:radio');
+    rdo.removeAttr('id');
+    rdo.attr('name', ext_rdo.attr('name'));
+    var ext_txt = $("ul#survey_0").find('input:text');
+    var txt = tmp.find('input:text');
+    txt.removeAttr('id');
+    txt.removeAttr('readonly');
+    txt.removeAttr('value');
+    txt.attr('name', 'rtext_0_'+ext_txt.length);
+    tmp.appendTo("ul#survey_0");
+  });
+  
+  $("#edit").click(function() {
+    $('div.fix_0').remove();
+    $('div.menu_0').css('display', 'none');
+    $('div.ee_0').css('display', 'block');
+  });
+  
+  $("#fixed").click(function() {
+    $('div.ee_0').css('display', 'none');
+    $('div.menu_0').append('<div class="fix_0">');
+    var txt = $("ul#survey_0").find('input:text');
+    txt.each(function(i) {
+      $('<input>', { type: 'radio', name: 'radio_0', val: this.value }).appendTo('div.fix_0');
+      $('div.fix_0').append(this.value+'<br>');
+    });
+    $('div.menu_0').css('display', 'block');
+  });
+  
+  $("#button1").click(function(){
+    $("div.contentstest").prepend("<p>This is test.</p>");
+    $("p").attr("id",function(i){
+      return "num"+i;
+    });
+  });
+
+  $("#button2").click(function(){
+    $("p#num4").css("background-color","red");
+  });
+ 
+});
+</script>
+
+</head>
+<body>
+
+<section id="content">
+<div class="survey">
+  <div class="menu_0">
+    <input type="button" id="edit" value="編集" />
+  </div><!-- div.menu_0 -->
+  <div class="ee_0">
+    <ul id="survey_0" class="ui-sortable">
+    	<li class="ui-state-default">
+        <input type="radio" name="radio_0" disabled="disabled" />
+        <input type="text" name="rtext_0_0" />
+      </li><!-- li.ui-state-default -->
+    </ul><!-- ul#survey_0 -->
+    <ul>
+	    <li id="draggable" class="ui-state-highlight ui-draggable">
+        <input type="radio" id="radio_m" disabled="disabled" />
+        <input type="text" id="rtext_m" value="Click me to add" readonly="readonly" />
+      </li>
+    </ul>
+    <input type="button" id="fixed" value="完了">
+  </div><!-- div.ee_0 -->
+</div>
+
+<form action="@action(controllers.Application.save)" method="POST">
+  <ul id="stest">
+    <li class="ui-state-default"><input type="text" name="msg1" /></li>
+    <li class="ui-state-default"><input type="text" name="date" id="date" /></li>
+    <li class="ui-state-default">
+      <ul id="sortable_test">
+        <li class="ui-state-default">Item1</li>
+        <li class="ui-state-default">Item2</li>
+        <li class="ui-state-default">Item3</li>
+        <li class="ui-state-default">Item4</li>
+        <li class="ui-state-default">Item5</li>
+      </ul>
+    </li>
+  </ul>
+  <input type="submit" value="save" />
+</form>
+<p></p>
+<button id="button1">Click me</button>
+<button id="button2">TEST</button>
+<div class="contentstest"></div>
+</section>
+    
+</body>
+</html>

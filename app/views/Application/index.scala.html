@@ -1,0 +1,67 @@
+@(title:String)
+
+@main(title) {
+<div id="content">
+  <div id="header">
+    <h1 class="ss-form-title">業務改善に関するアンケート</h1>
+    <p></p>
+    <div id="desc">業務改善説明会にご参加いただき、ありがとうございました。<br>
+皆様のご意見を参考にさせていただきますので、下記のアンケートにご協力のほどお願いいたします。</div>
+    <hr class="ss-email-break" style="display:none;">
+    <div class="ss-required-asterisk">*必須</div>
+  </div>
+    <p></p>
+    
+  <form action="@action(controllers.Application.entry)" method="POST">
+    <div id="question">
+      <label class="ss-q-title" for="entry_id">社員番号*</label><br>
+      <input type="text" name="entryid" value="" class="ss-q-short" id="entry_id"><span id="namae"></span>
+<script type="text/javascript">
+$('#entry_id').blur(function() {
+  var cust = $('#entry_id').val();
+  $.get(
+    'test',
+    {no: cust},
+    function(data) {
+      $('#namae').text(data);
+    }
+  );
+})
+</script>
+    </div>
+    <div id="question">
+性別<br>
+<select name=""><option value="男性">男性</option><option value="女性">女性</option></select>
+    </div>
+    <div id="question">
+    <ul id="question">
+1-1　今回のイベントに参加してみていかがでしたか？ *
+
+<li><input type="checkbox" value="a"> 業務に活かせそう・役に立ちそう</li>
+<li><input type="checkbox" value="b"> 知見・視野が広がった、刺激になった</li>
+<li><input type="checkbox" value="c"> どちらでもない</li>
+<li><input type="checkbox" value="d"> 欠席した</li>
+    </ul>
+  </div>
+    <div id="question">
+
+1-2　上記の理由を教えてください。また、感想・疑問・ご意見等ありましたらお書きください。 
+<textarea name="entry.4.single" rows="8" cols="75" class="ss-q-long" id="entry_4"></textarea>
+
+    </div>
+    <div id="question">
+    <ul id="question">
+2-1 今回のようなスマートフォンの調査データの定点観測データがあった場合には使用したいですか？ 
+<li><input type="radio" name="entry.8.group" value="a"> ぜひ使いたい（使用イメージがある）</li>
+<li><input type="radio" name="entry.8.group" value="a"> 使用イメージはないが、参考までにデータはみたい</li>
+<li><input type="radio" name="entry.8.group" value="a"> 今回のような調査データは特に必要ない</li>
+  <li><input type="radio" name="entry.8.group" value="a"> その他</li>
+
+    </div>
+    <div id="footer">
+
+        <input type="submit" value="送信" />
+      </div>
+    </form>
+    </div><!-- div#content -->
+}

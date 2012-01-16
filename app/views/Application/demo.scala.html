@@ -1,0 +1,85 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+        <head> 
+<link type="text/css" href="public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+<script type="text/javascript" src="public/javascripts/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<style> 
+div {border-style:dotted; border-width:1px;}
+/* div.ui-draggable { display: inline; } */
+</style> 
+        </head>   
+        <body id="uidemo"> 
+                <div id="container" style="border-style:solid; 
+border-width:1px;width:400px"> 
+                        <div class ="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                        <div class="sortableContainer" id="section"> 
+                                Drop 
+                                </div> 
+                        <div class ="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                        <div class="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                        <div class ="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                        <div class="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                        <div class ="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                        <div class="sortableContainer" id="section" > 
+                                Drop 
+                                </div> 
+                </div> 
+                        <br><br><br> 
+                        <div id="dragElement" style="width:100px;border-style:solid;">Drag</div>
+                <script type="text/javascript"> 
+                (function($){ 
+                        var resizableResize = function(e, ui){ 
+                                //alert($(e).html()); 
+                        }; 
+                        $(document).ready(function(){ 
+                                var parentels = ['#container']; 
+                                var $parentels = $(parentels.toString()); 
+                                $parentels.sortable({   
+                                        items: '> div',       
+                                        //handle: 'dd', 
+                                        cursor: 'move', 
+                                        appendTo: 'body',       
+                                        placeholder: 'placeholder',     
+                                        connectWith: parentels, 
+                                        distance: 50, 
+                                        start: function(e,ui) { 
+                                                ui.helper.css("width", ui.item.width()); 
+                                        } 
+                                }); 
+                                var els = ['div.sortableContainer']; 
+                                var $els = $(els.toString());                           
+                                $els.sortable({ 
+                                        items: '> div',       
+                                        //handle: 'dd', 
+                                        cursor: 'move', 
+                                        appendTo: 'body',       
+                                        placeholder: 'placeholder',     
+                                        connectWith: els, 
+                                        distance: 50, 
+                                        start: function(e,ui) { 
+                                                ui.helper.css("width", ui.item.width()); 
+                                        } 
+                                });                             
+                                $('#dragElement').draggable({   
+                                        helper: 'clone',                                 
+                                        connectToSortable: 'div.sortableContainer' 
+                                }); 
+                        }); 
+                })(jQuery); 
+                </script> 
+        </body> 
+</html> 

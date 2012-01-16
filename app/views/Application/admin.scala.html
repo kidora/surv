@@ -1,0 +1,35 @@
+@(mode:String,uid:Int,obj:List[(String, String)])
+@main(title = "管理画面") {
+<div id="content">
+  <h1>管理画面</h1>
+  <div id="summary">
+    @mode match {
+      case "user" => {
+        <p>ユーザー</p>
+        <table>
+          <tr>
+            <td>ユーザーID</td>
+            <td>氏名</td>
+            <td>メールアドレス</td>
+          </tr>
+        </table>
+      }
+      case "survey" => {
+        <p>アンケート</p>
+        <ul>
+          @for((s, c) <- obj) {<li><a href="@action(controllers.Application.create("1", s))">@c</a></li>}
+          <li><a href="@action(controllers.Application.create("1", obj.length.toString))">アンケート作成</a></li>
+        </ul>
+      }
+    }
+  </div>
+  <div id="menu">
+    <ul>
+      <li><a href="@action(controllers.Application.admin("survey"))">アンケート</a></li>
+      <li><a href="@action(controllers.Application.sum)">集計結果</a></li>
+      <li><a href="@action(controllers.Application.admin("user"))">ユーザー</a></li>
+    </ul>
+  </div>
+  <footer></footer>
+</div>
+}

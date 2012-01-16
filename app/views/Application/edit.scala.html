@@ -1,0 +1,105 @@
+@(title:String="edit")
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>@title</title>
+        <link rel="stylesheet" media="screen" href="/surv/public/stylesheets/main.css">
+        <link rel="shortcut icon" type="image/png" href="/surv/public/images/favicon.png">
+<link type="text/css" href="public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+<script type="text/javascript" src="public/javascripts/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<style>
+/*
+ul#sortable li {
+  width: 100px;
+  display: inline;
+}
+#newline { clear: both; }
+*/
+.ui {
+	min-height: 48px;
+	margin: 20px 0;
+	padding: 10px;
+	background-color: #ccc;
+}
+
+.sortable p {
+	float: left;
+	width: 100px;
+}
+
+.placeholder {
+	outline: 2px dashed #fff;
+}
+
+#draggable {
+	width: 100px;
+}
+</style>
+<script>
+
+$(function() {
+  /*
+		$( "#sortable" ).sortable({
+			revert: true
+		});
+		$( "#draggable" ).draggable({
+			connectToSortable: $("#sortable"),
+			helper: "clone",
+			revert: "invalid"
+		});
+		$( "ul, li" ).disableSelection();
+    */
+var drags = $( "#draggable, #draggableb" );
+var sorts = $( ".sortable" );
+
+drags.draggable({
+	opacity: 0.8,
+	helper: 'clone',
+	connectToSortable: sorts
+});
+apply_sort(sorts);
+
+function apply_sort(element) {
+	$(element).sortable({
+		connectWith         : sorts,
+		revert              : true,
+		placeholder         : 'placeholder',
+		forcePlaceholderSize: true,
+		forceHelperSize     : true
+	});
+}
+});
+
+
+</script>
+
+</head>
+<body>
+  <header>header</header>
+  <nav>
+    <p id="draggable" class="ui-state-highlight">ラベル</p>
+    <p id="draggableb" class="ui-state-highlight">テキストボックス</p>
+    <ul>
+      <li id="draggablea" class="ui-state-highlight">テキストエリア</li>
+    </ul>
+    <div id="item">ラベル</div>
+    <div id="item">テキストボックス</div>
+    <div id="item">テキストエリア</div>
+  </nav>
+  <section class="ed_form">
+    <div class="ui sortable">
+      <p>a</p>
+    </div>
+    <div class="ui sortable">
+      <p>b</p>
+    </div>
+    <div id="newline">New Line</div>
+  </section>
+  <footer>footer</footer>
+
+    </body>
+</html>

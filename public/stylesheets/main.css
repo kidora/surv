@@ -1,0 +1,84 @@
+body {
+    background: #364B66 !important;
+    font-family: Helvetica, Arial, Sans !important;
+}
+div#header,
+header {
+    margin: 10px;
+}
+nav {
+    width: 200px;
+    float: left;
+}
+div#content,
+section {
+  width: 760px;
+  margin: auto;
+  padding: 10px;
+  background-color: white;
+}
+section.ed_form {
+  width: 560px;
+  margin-left: 200px;
+}
+div#content h1 {
+    text-align: center;
+}
+div#res {
+}
+div#res h2 {
+    background-color: #a3d2f2;
+    border-left: solid 10px #3344dd;
+    padding: 10px;
+    margin: 5px;
+    font-size: 1em;
+}
+div#resg {
+    margin: 5px;
+}
+div#question {
+    margin: 20px;
+}
+ul {
+    margin: 0;
+    padding: 0;
+}
+ul li {
+    list-style-type: none;
+}
+
+div#menu {
+    float: left;
+    width: 220px;
+}
+
+div#summary {
+    float: right;
+    width: 520px;
+}
+
+div#footer,
+footer {
+    clear: both;
+}
+
+div#gotop {
+    text-align: right;
+}
+
+span#namae {
+    padding-top: 4px;
+    margin-left: 10px;
+    color: #333333;
+}
+
+/**
+ * アンケート作成画面 */
+div.survey {
+    margin: 5px;
+    padding: 5px;
+    border: solid 1px #0c8bcd; 
+}
+div.ee_menu {
+    margin: 5px;
+}

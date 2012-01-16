@@ -1,0 +1,47 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /surv/                                  Application.index
+
+# Login page
+GET     /surv/login                             Application.login
+POST    /surv/login                             Application.auth
+
+# Entry page
+POST    /surv/entry                             Application.entry
+
+# Admin page
+GET     /surv/admin                             Application.admin
+POST    /surv/cancel                            Application.cancel
+
+GET     /surv/test                              Application.test
+
+# Create page
+GET     /surv/create                            Application.create
+GET     /surv/load                              Application.load
+POST    /surv/save                              Application.save
+
+# Summary page
+GET     /surv/sum                               Application.sum
+
+# Form edit page
+GET     /surv/edit                              Form.edit
+GET     /surv/demo                              Form.demo
+
+# HTML5 samples
+GET     /surv/samples                           Sample.samples
+GET     /surv/reversi                           Sample.reversi
+GET     /surv/geolocation                       Sample.geolocation
+GET     /surv/sampload                          Sample.load
+GET     /surv/i                                 Sample.imode
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /surv/public/                                staticDir:public
+
+# Catch all
+*       /surv/{controller}/{action}                  {controller}.{action}

@@ -1,0 +1,34 @@
+@(title:String="samples")
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>@title</title>
+<script type="text/javascript" src="public/javascripts/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+$(function(){
+			navigator.geolocation.getCurrentPosition(function(pos) {
+				var cds = pos.coords;
+        console.log(
+          "緯度: " + cds.latitude,
+          "経度: " + cds.longitude
+        );
+				// 取得した位置情報をGooglemapAPIに投げる
+//				gMapInit(cds.latitude, cds.longitude);
+  $.get('@action(controllers.Sample.load)', {
+    'lat': cds.latitude,
+    'lng': cds.longitude
+  }, function(data) {
+    $("#cont").html(data);
+  });
+			});
+});
+	</script>
+</head>
+<body>
+  <div id="cont">content</div>
+</body>
+</html>
