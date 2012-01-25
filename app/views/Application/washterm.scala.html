@@ -1,0 +1,26 @@
+@(obj:List[(String, String, String)])
+<!DOCTYPE html>
+<html>
+<head>
+<title>WASHハウス | 端末情報入力画面</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/wash.css">
+<link type="text/css" href="/surv/public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+</head>
+<body>
+<section id="adm">
+  <header id="admhdr">
+    <h1>端末情報入力画面</h1>
+  </header>
+  <section id="admfrm">
+  <form id="main" action="@action(controllers.Wash.entry)" method="POST">
+    @for((i, n, a) <- obj) {
+      <p><div class="item_hdr">IP Address: </div><input type="text" id="term_ip" name="term_ip" value="@i"/></p>
+      <p><div class="item_hdr">店舗名: </div><input type="text" id="term_name" name="term_name" value="@n"/></p>
+      <p><div class="item_hdr">住所: </div><input type="text" id="term_add" name="term_add" value="@a"/></p>
+    }
+    <input type="submit" id="save" value="設定" />
+  </form>
+  </section>
+</section><!-- section#content -->
+</body>
+</html>

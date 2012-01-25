@@ -1,5 +1,51 @@
-@(mode:String,uid:Int,obj:List[(String, String)])
-@main(title = "管理画面") {
+@(mode:String,uid:Int,obj:List[(String, String, String)])
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>管理画面</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/main.css">
+<link type="text/css" href="/surv/public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery.json-2.3.min.js"></script>
+<script>
+@if(mode.equals("term")) {
+$(function() {
+  $("tr#selectable").mouseover(function(){
+    $(this).addClass('ui-state-hover');
+  }).mouseout(function(){
+    $(this).removeClass('ui-state-hover');
+  });
+  $("tr#selectable").click(function(){
+    var m = "";
+    var i = 0
+    $(this).find("td").each(function(){
+      switch (i) {
+        case 0:
+          if ($(this).text()!="新規追加")
+            $("#ip").val($(this).text());
+          break;
+        case 1:
+          $("#term_name").val($(this).text());
+          break;
+        case 2:
+          $("#term_add").val($(this).text());
+          break;
+        default:
+          break;
+      }
+      i++;
+    });
+    $("#frm_term").submit();
+  });
+});
+}
+</script>
+
+</head>
+<body>
 <div id="content">
   <h1>管理画面</h1>
   <div id="summary">
@@ -17,9 +63,27 @@
       case "survey" => {
         <p>アンケート</p>
         <ul>
-          @for((s, c) <- obj) {<li><a href="@action(controllers.Application.create("1", s))">@c</a></li>}
+          @for((s, c, a) <- obj) {<li><a href="@action(controllers.Application.create("1", s))">@c</a></li>}
           <li><a href="@action(controllers.Application.create("1", obj.length.toString))">アンケート作成</a></li>
         </ul>
+      }
+      case "term" => {
+        <h2>端末情報管理</h2>
+        <table id="tbl_term">
+          <tr><th>IPアドレス</th><th>店舗名</th><th>住所</th></tr>
+          @for((i, n, a) <- obj) {
+            <tr id="selectable"><td>@i</td><td>@n</td><td>@a</td></tr>
+          }
+          <tr id="selectable"><td colspan="3"><a href="@action(controllers.Sample.edit_term)">新規追加</a></td></tr>
+        </table>
+        <form id="frm_term" action="@action(controllers.Sample.edit_term)" method="POST">
+          <input type="hidden" id="ip" name="ip" />
+          <input type="hidden" id="term_name" name="term_name" />
+          <input type="hidden" id="term_add" name="term_add" />
+        </form>
+      }
+      case "cont" => {
+        
       }
     }
   </div>
@@ -32,4 +96,6 @@
   </div>
   <footer></footer>
 </div>
-}
+
+</body>
+</html>

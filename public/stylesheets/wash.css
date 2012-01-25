@@ -1,0 +1,187 @@
+body {
+    background: white;
+    color: black;
+    font-family: "メイリオ", "Meiryo", "ヒラギノ角ゴ Pro W3", "Osaka", "ＭＳ Ｐゴシック";
+    margin: 0;
+    padding: 0;
+}
+p {
+    margin: 0;
+}
+div#content,
+section {
+  width: 760px;
+  margin: auto;
+  padding: 0px;
+  background-color: white;
+}
+
+/* 管理画面表示用 */
+header#admhdr {
+    border-style: solid;
+    border-width:2px 0px 2px 0px;
+    border-color:#b30404;
+    text-align: center;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ccc),  
+            color-stop(0.2, #fff),  
+            color-stop(0.5, #fff),  
+            color-stop(0.8, #fff),  
+            to(#ccc));　/* Safari,Google Chrome用 */
+}
+nav#admnav {
+    width: 200px;
+    height: 480px;
+    float: left;
+    border: 0px solid blue;
+    background: #f0f0f0;
+}
+ul#admmenu {
+    margin: 0;
+    padding-left: 0;
+}
+ul#admmenu li {
+    list-style-type: none;
+    padding: 4px 8px 4px 16px;
+    background: #f0f0f0;
+}
+ul#admmenu li a:link,
+ul#admmenu li a:visited {
+    color: black;
+}
+ul#admmenu li.menuselected {
+    color: white;
+    background: #b30404;
+}
+ul#admmenu li.menu_hover {
+    background-color: white;
+    border-style:dotted solid;
+    border-width:1px 8px 1px 8px;
+    border-color:#b30404;
+    color: white;
+}
+ul#admmenu li.menuselected.menu_hover a:link,
+ul#admmenu li.menuselected.menu_hover a:visited {
+    color: black;
+}
+ul#admmenu li.menuselected a:link,
+ul#admmenu li.menuselected a:visited {
+    color: white;
+}
+section#admwk {
+    width: 558px;
+    height: 480px;
+    float: right;
+    border-style: solid;
+    border-width:0px 0px 0px 2px;
+    border-color:#b30404;
+}
+div#admtbl {
+  width: 540px;
+  margin: auto;
+  padding-top: 8px;
+}
+#tbl_term,
+#tbl_cont {
+  width: 540px;
+  border-collapse: collapse;
+  border: 1px solid #660000;
+}
+#tbl_term th,
+#tbl_cont th {
+    color: white;
+    background: #b30404;
+  border: 1px solid #660000;
+}
+#tbl_term td,
+#tbl_cont td {
+  border: 1px solid #660000;
+}
+/* 管理用詳細画面表示用 */
+section#admfrm {
+  width: 736px;
+  margin: auto;
+  padding: 8px 16px;
+}
+section#admfrm p {
+  padding: 4px;
+}
+.item_hdr {
+  width: 120px;
+  float: left;
+}
+
+/* クライアント表示用 */
+header#clhdr {
+    border-style: solid;
+    border-width:2px 2px 2px 2px;
+    border-color:#fdb813;
+    text-align: center;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fdb813),  
+            color-stop(0.3, #fff),  
+            color-stop(0.5, #fff),  
+            color-stop(0.7, #fff),  
+            to(#fdb813));　/* Safari,Google Chrome用 */  
+}
+header#clhdr h1 {
+  color: #b30404;
+}
+section#clcont {
+    float: left;
+    width: 556px;
+    height: 480px;
+    padding: 0;
+    border-style: solid;
+    border-width:0px 0px 0px 2px;
+    border-color:#fdb813;
+}
+nav#clnav {
+    width: 198px;
+    height: 480px;
+    float: right;
+    border-style: solid;
+    border-width:0px 2px;
+    border-color:#fdb813;
+    background: #007ec6;
+}
+ul#clmenu {
+    margin: 0;
+    padding-left: 0;
+}
+ul#clmenu li {
+    list-style-type: none;
+    padding: 14px 8px;
+    background: #007ec6;
+    color: white;
+}
+ul#clmenu li.menu_hover {
+    background-color:#FFFFFF;
+    border-style:dotted solid;
+    border-width:1px 8px 1px 8px;
+    border-color:#007ec6;
+    color: #b30404;
+}
+.menu_hover {
+    background-color:#FFFFFF;
+    border-style:dotted solid;
+    border-width:1px 0px 1px 8px;
+    border-color:#007ec6;
+}
+section#cont_main {
+    height: 480px;
+}
+section#cont_main h1 {
+  margin-top: 0;
+  padding-top: 18px;
+}
+footer#clftr {
+    clear: both;
+    border-style: solid;
+    border-width:2px 2px 2px 2px;
+    border-color:#fdb813;
+    text-align: center;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fdb813),  
+            color-stop(0.3, #fff),  
+            color-stop(0.5, #fff),  
+            color-stop(0.7, #fff),  
+            to(#fdb813));　/* Safari,Google Chrome用 */  
+}

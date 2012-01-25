@@ -27,17 +27,33 @@ object Application extends Controller {
     def cancel = Redirect("/surv/admin")
 
     // 管理画面
-    def admin(mode: String = "survey") = {
-      val uid = 1
-      val q = MongoDBObject("uid" -> uid)
-      val o = MongoDBObject("_id" -> 0, "uid" -> 1, "survey_id" -> 1, "caption" -> 1)
-      // val s = _mongoConn("surv")("survey").find(q,o).toList
-      val x = for{
-        t <- _mongoConn("surv")("survey").find(q,o).sort(MongoDBObject("survey_id"->1)).toList
-        Some(sid: Int) = t.getAs[Int]("survey_id")
-        Some(cap: String) = t.getAs[String]("caption")
-      } yield (sid.toString, cap)
-      html.admin(mode,uid,x)
+    def admin(mode: String = "survey") = mode match {
+      case "wash" => {
+      }
+      case "term" => {
+        val uid = 1
+        val q = MongoDBObject.empty
+        val o = MongoDBObject("_id" -> 0, "ip" -> 1, "term_name" -> 1, "term_add" -> 1)
+        val x = for{
+          t <- _mongoConn("wash")("term").find(q,o).sort(MongoDBObject("ip"->1)).toList
+          Some(ip: String) = t.getAs[String]("ip")
+          Some(term_name: String) = t.getAs[String]("term_name")
+          Some(term_add: String) = t.getAs[String]("term_add")
+        } yield (ip, term_name, term_add)
+        html.admin(mode,uid,x)
+      }
+      case _ => {
+        val uid = 1
+        val q = MongoDBObject("uid" -> uid)
+        val o = MongoDBObject("_id" -> 0, "uid" -> 1, "survey_id" -> 1, "caption" -> 1)
+        // val s = _mongoConn("surv")("survey").find(q,o).toList
+        val x = for{
+          t <- _mongoConn("surv")("survey").find(q,o).sort(MongoDBObject("survey_id"->1)).toList
+          Some(sid: Int) = t.getAs[Int]("survey_id")
+          Some(cap: String) = t.getAs[String]("caption")
+        } yield (sid.toString, cap, uid.toString)
+        html.admin(mode,uid,x)
+      }
     }
 
     def test(no: String) = no match {

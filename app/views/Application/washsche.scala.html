@@ -1,0 +1,32 @@
+@(obj:List[(String, String, String, String, String, List[String])],term:List[(String,String)])
+<!DOCTYPE html>
+<html>
+<head>
+<title>WASHハウス | コンテンツスケジュール設定画面</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/wash.css">
+</head>
+<body>
+<section id="content">
+  <header id="admhdr">
+    <h1>コンテンツスケジュール設定画面</h1>
+  </header>
+  <section id="admfrm">
+  <form id="main" action="@action(controllers.Wash.sche_entry)" method="POST">
+    @for((ttl, st_dt, st_tm, en_dt, en_tm, tm) <- obj) {
+    <p><div class="item_hdr">タイトル: </div><input type="hidden" id="cont_ttl" name="cont_ttl" value="@ttl"/>@ttl</p>
+    <p><div class="item_hdr">配信開始日時: </div><input type="text" id="st_dt" name="st_dt" value="@st_dt" /><input type="text" id="st_tm" name="st_tm" value="@st_tm" /></p>
+    <p><div class="item_hdr">配信終了日時: </div><input type="text" id="en_dt" name="en_dt" value="@en_dt" /><input type="text" id="en_tm" name="en_tm" value="@en_tm" /></p>
+    <p><div class="item_hdr">配信対象店舗: </div>
+      <select id="tm" name="tm" multiple>
+        @for((ip, n) <- term) {
+          <option value="@ip" @if(tm.contains(ip)){selected="selected"}>@n</option>
+        }
+      </select>
+    </p>
+    }
+    <input type="submit" id="save" value="保存" />
+  </form>
+  </section>
+</section><!-- section#content -->
+</body>
+</html>

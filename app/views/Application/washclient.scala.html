@@ -1,0 +1,59 @@
+@(mode:String, ip:String, obj:List[(String)], content: String)
+<!DOCTYPE html>
+<html>
+<head>
+<title>WASHハウス | コンテンツ表示例</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/wash.css">
+<link type="text/css" href="/surv/public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<script>
+$(function() {
+  $("ul#clmenu li").mouseover(function(){
+    $(this).addClass('menu_hover');
+  }).mouseout(function(){
+    $(this).removeClass('menu_hover');
+  });
+  $("ul#clmenu li").click(function() {
+    $("#mode").val("Content");
+    $("#cont_ttl").val($(this).text());
+    $("#frm_cont").submit();
+  });
+});
+</script>
+</head>
+<body style="background: #ffd843">
+  <section id="content">
+    <header id="clhdr"><h1>情報STATION</h1></header>
+@mode match {
+  case "top" => {
+    <section id="clcont">
+      <div id="washer"><img src="/surv/public/images/washer.png" /><img src="/surv/public/images/washdry.png" /></div>
+      <div id="washfamily"><img src="/surv/public/images/washfamily.png" /></div>
+      <div id="washshop"><img src="/surv/public/images/washshop.png" /></div>
+    </section>
+    <nav id="clnav">
+      <ul id="clmenu">
+        @for((ttl) <- obj) {
+          <li>@ttl</li>
+        }
+      </ul>
+    </nav>
+  }
+  case _ => {
+    <section id="cont_main">
+      @Html(content)
+    </section>
+  }
+}
+    <footer id="clftr">
+      <form id="frm_cont" action="@action(controllers.Wash.index())" method="POST">
+        <input type="hidden" id="mode" name="mode" />
+        <input type="hidden" id="ip" name="ip" value="@ip" />
+        <input type="hidden" id="cont_ttl" name="cont_ttl" />
+      </form>
+      <a href="@action(controllers.Wash.index())">Topページへ</a>
+    </footer>
+  </section><!-- section#content -->
+</body>
+</html>

@@ -1,0 +1,32 @@
+@(obj:List[(String, String)])
+<!DOCTYPE html>
+<html>
+<head>
+<title>WASHハウス | コンテンツ作成画面</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/wash.css">
+<link rel="stylesheet" type="text/css" href="/surv/public/stylesheets/jquery.cleditor.css" />
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery.cleditor.min.js"></script>
+<script>
+      $(document).ready(function() {
+        $("#cont").cleditor();
+      });
+</script>
+</head>
+<body>
+<section id="content">
+  <header id="admhdr">
+    <h1>端末情報入力画面</h1>
+  </header>
+  <section id="admfrm">
+  <form id="main" action="@action(controllers.Wash.cont_entry)" method="POST">
+    @for((t, c) <- obj) {
+      <p><div class="item_hdr">タイトル: </div><input type="text" id="cont_ttl" name="cont_ttl" value="@t"/></p>
+      <p><div class="item_hdrwys">コンテンツ: </div><textarea id="cont" name="cont">@c</textarea></p>
+    }
+    <input type="submit" id="save" value="保存" />
+  </form>
+  </section>
+</section><!-- section#content -->
+</body>
+</html>

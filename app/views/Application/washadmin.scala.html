@@ -1,0 +1,162 @@
+@(mode: String,obj:List[(String, String, String)])
+<!DOCTYPE html>
+<html>
+<head>
+<title>WASHハウス | コンテンツ管理画面</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/wash.css">
+<link type="text/css" href="/surv/public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery.json-2.3.min.js"></script>
+<script>
+$(function() {
+  $("ul#admmenu li").mouseover(function(){
+    $(this).addClass('menu_hover');
+  }).mouseout(function(){
+    $(this).removeClass('menu_hover');
+  });
+//  $("ul#admmenu li").click(function() {
+//    $("#mode").val("Content");
+//    $("#cont_ttl").val($(this).text());
+//    $("#frm_cont").submit();
+//  });
+
+@mode match {
+  case "term" => {
+  $("tr#selectable").mouseover(function(){
+    $(this).addClass('ui-state-hover');
+  }).mouseout(function(){
+    $(this).removeClass('ui-state-hover');
+  });
+  $("tr#selectable").click(function(){
+    var m = "";
+    var i = 0
+    $(this).find("td").each(function(){
+      switch (i) {
+        case 0:
+          if ($(this).text()!="新規追加")
+            $("#ip").val($(this).text());
+          break;
+        case 1:
+          $("#term_name").val($(this).text());
+          break;
+        case 2:
+          $("#term_add").val($(this).text());
+          break;
+        default:
+          break;
+      }
+      i++;
+    });
+    $("#frm_term").submit();
+  });
+  }
+  case "cont" => {
+  $("tr#selectable").mouseover(function(){
+    $(this).addClass('ui-state-hover');
+  }).mouseout(function(){
+    $(this).removeClass('ui-state-hover');
+  });
+  $("tr#selectable").click(function(){
+    var m = "";
+    var i = 0
+    $(this).find("td").each(function(){
+      switch (i) {
+        case 0:
+          if ($(this).text()!="新規追加")
+            $("#cont_ttl").val($(this).text());
+          break;
+        default:
+          break;
+      }
+      i++;
+    });
+    $("#frm_cont").submit();
+  });
+  }
+  case "sche" => {
+  $("tr#selectable").mouseover(function(){
+    $(this).addClass('ui-state-hover');
+  }).mouseout(function(){
+    $(this).removeClass('ui-state-hover');
+  });
+  $("tr#selectable").click(function(){
+    var m = "";
+    var i = 0
+    $(this).find("td").each(function(){
+      switch (i) {
+        case 0:
+          if ($(this).text()!="新規追加")
+            $("#cont_ttl").val($(this).text());
+          break;
+        default:
+          break;
+      }
+      i++;
+    });
+    $("#frm_cont").submit();
+  });
+  }
+  case _ => {
+  }
+}
+});
+</script>
+</head>
+<body>
+  <section id="adm">
+    <header id="admhdr"><h1>コンテンツ管理画面</h1></header>
+    <nav id="admnav">
+      <ul id="admmenu">
+        <li @if(mode.equals("term")){class="menuselected"}><a href="@action(controllers.Wash.admin("term"))">端末情報</a></li>
+        <li @if(mode.equals("cont")){class="menuselected"}><a href="@action(controllers.Wash.admin("cont"))">コンテンツ</a></li>
+        <li @if(mode.equals("sche")){class="menuselected"}><a href="@action(controllers.Wash.admin("sche"))">スケジュール</a></li>
+      </ul>
+    </nav>
+    <section id="admwk">
+      <div id="admtbl">
+      @mode match {
+        case "term" => {
+          <table id="tbl_term">
+            <tr><th>IPアドレス</th><th>店舗名</th><th>住所</th></tr>
+            @for((i, n, a) <- obj) {
+            <tr id="selectable"><td>@i</td><td>@n</td><td>@a</td></tr>
+            }
+            <tr id="selectable"><td colspan="3"><a href="@action(controllers.Wash.edit_term)">新規追加</a></td></tr>
+          </table>
+          <form id="frm_term" action="@action(controllers.Wash.edit_term)" method="POST">
+            <input type="hidden" id="ip" name="ip" />
+            <input type="hidden" id="term_name" name="term_name" />
+            <input type="hidden" id="term_add" name="term_add" />
+          </form>
+        }
+        case "cont" => {
+          <table id="tbl_cont">
+            <tr><th>コンテンツタイトル</th></tr>
+            @for((t, u, v) <- obj) {
+              <tr id="selectable"><td>@t</td></tr>
+            }
+            <tr id="selectable"><td><a href="@action(controllers.Wash.cont_edit_new)">新規作成</a></td></tr>
+          </table>
+          <form id="frm_cont" action="@action(controllers.Wash.cont_edit)" method="POST">
+            <input type="hidden" id="cont_ttl" name="cont_ttl" />
+          </form>
+        }
+        case "sche" => {
+          <table id="tbl_cont">
+            <tr><th>コンテンツタイトル</th></tr>
+            @for((t, u, v) <- obj) {
+              <tr id="selectable"><td>@t</td></tr>
+            }
+          </table>
+          <form id="frm_cont" action="@action(controllers.Wash.sche_edit)" method="POST">
+            <input type="hidden" id="cont_ttl" name="cont_ttl" />
+          </form>
+        }
+        case _ => {}
+      }
+      </div>
+    </section>
+  </section>
+</body>
+</html>

@@ -1,0 +1,21 @@
+@(obj:List[(String, String, String)])
+<!DOCTYPE html>
+<html>
+<head>
+<title>端末情報入力画面</title>
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+<link type="text/css" href="public/stylesheets/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+</head>
+<body>
+<section id="content">
+  <form id="main" action="@action(controllers.Sample.entry)" method="POST">
+    @for((i, n, a) <- obj) {
+    <p>IP Address: <input type="text" id="term_ip" name="term_ip" value="@i"/></p>
+    <p>店舗名: <input type="text" id="term_name" name="term_name" value="@n"/></p>
+    <p>住所: <input type="text" id="term_add" name="term_add" value="@a"/></p>
+    }
+    <input type="submit" id="save" value="設定" />
+  </form>
+</section><!-- section#content -->
+</body>
+</html>
