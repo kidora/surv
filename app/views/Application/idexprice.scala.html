@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, height=692, initial-scale=1.0, user-scalable=no">
+<title>IDEX | イデックス車検の特典＆料金表</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/idex.css">
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery.flickable-1.0b3-jq1.6.js"></script>
+<style type="text/css">
+#shaken {
+        overflow: hidden;
+      }
+      #shaken ul {
+        list-style: none;
+        width:958px;
+        margin: 0 auto;
+        padding: 0;
+        position: relative;
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0,0,0.25,1);
+      }
+      #shaken ul li {
+  display: block;
+  width: 958px;
+  height: 512px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  float: left;
+  -webkit-transform: translateZ(0);
+      }
+.cont1 {
+   -webkit-transform: translate3d(0px, 0px, 0px);
+}
+.cont2 {
+   -webkit-transform: translate3d(0px, -512px, 0px);
+}
+.cont3 {
+   -webkit-transform: translate3d(0px, -1024px, 0px);
+}
+.cont4 {
+   -webkit-transform: translate3d(0px, -1536px, 0px);
+}
+.contz {
+  z-index: 1001;
+}
+.wait {
+  position: absolute; top: 0; left: 0; z-index: 100; width: 824px; height: 492px; margin: 0 auto; padding: 100px;
+  color: #333; background: #ddd; font-size: 1.6em;
+  text-align: center;
+}
+.hidden {
+  visibility: hidden;
+}
+    </style>
+
+<script>
+$(function() {
+//  $('#shaken').flickable({section:'li'});
+var page = 1;
+  $("#prev").click(function() {
+    if (page>1) {
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page-1));
+      $("#shaken ul").removeClass("contz");
+      page--;
+    }
+  });
+  $("#next").click(function() {
+    if(page<2) { 
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page+1));
+      $("#shaken ul").removeClass("contz");
+      page++;
+    }
+  });
+  var shk = $("#shaken")[0];
+  shk.addEventListener("touchstart", touchHandler, false);
+
+  shk.addEventListener("touchmove", touchHandler, false);
+
+  shk.addEventListener("touchend", touchHandler, false);
+  
+function touchHandler(e) {
+    e.preventDefault();
+    var touch = e.touches[0];
+    if (e.type == "touchstart") {
+        startY = touch.pageY;
+    } else if (e.type == "touchmove") {
+        diffY = touch.pageY - startY;
+    } else if (e.type == "touchend") {
+        if (diffY > 60) {
+    if (page>1) {
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page-1));
+      $("#shaken ul").removeClass("contz");
+      page--;
+    }
+  } else if (diffY < -60) {
+    if(page<2) { 
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page+1));
+      $("#shaken ul").removeClass("contz");
+      page++;
+    }
+        }
+    }
+  }
+  $(window).load(function() {
+    $("#wait").addClass("hidden");
+  });
+});
+</script>
+</head>
+<body>
+<section>
+  <p id="wait" class="wait">Now Loading...<br>Please wait a minute.</p>
+  <header>
+    <!-- span style="width:300;height: 3em; font-size:1.4em;font-weight: bold;
+   -webkit-text-stroke: 1px #c00;
+   color: red;
+   text-shadow:
+       2px 2px 2px #ccc,
+     -1px -1px 0 #fff,
+      1px -1px 0 #fff,
+      -1px 1px 0 #fff,
+       1px 1px 0 #ccc;">IDEX</span -->
+      <div id="header_title">
+        <div id="hdr_imgs">
+          <img src="/surv/public/images/rogo.jpg">
+          <img src="/surv/public/images/top_catch.jpg">
+        </div>
+      </div>
+    <nav id="header_menu">
+      <ul>
+        <li><a href="@action(controllers.Idex.shaken)"><div id="navi2">イデックス車検の特徴</div></a></li>
+        <li><a href="@action(controllers.Idex.flow)"><div id="navi3">イデックス車検お申し込み手順</div></a></li>
+        <li><div id="navi4" class="navi_select">イデックス車検の特典＆料金表</div></li>
+        <li><a href="https://fukuoka.idexshaken.com/estimate.php"><div id="navi6">お見積もり</div></a></li>
+        <li><a href="https://fukuoka.idexshaken.com/reserve.php"><div id="navi7">ご予約</div></a></li>
+      </ul>
+        
+    </nav>
+  </header>
+  <article id="shaken">
+    <ul>
+      <li>
+        <img src="/surv/public/images/sub_price.jpg">
+        <img src="/surv/public/images/price_top_img01.jpg" style="height: 416px;">
+      </li>
+      <li>
+        <table class="price_data">
+  <tr>
+    <th colspan="2"></th>
+    <th>軽自動車</th>
+    <th>小型乗用車<br />
+    <span class="text1">～1,000kg</span></th>
+    <th>中型乗用車<br />
+    <span class="text1">1,001～1,500kg</span></th>
+    <th>大型乗用車<br />
+    <span class="text1">1,501～2,000kg</span></th>
+    <th>特大乗用車<br />
+    <span class="text1">2,001～2,500kg</span></th>
+    <th><span class="text1">小型貨物（4ナンバー</span>）<br />
+    <span class="text1">総重量2,000kg以下</span></th>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">車検基本工賃</td>
+    <td class="price">&yen;16,800</td>
+    <td class="price">&yen;16,800</td>
+    <td class="price">&yen;16,800</td>
+    <td class="price">&yen;16,800</td>
+    <td class="price">&yen;16,800</td>
+    <td class="price">&yen;16,800</td>
+  </tr>
+   <tr>
+    <td colspan="2" align="center">継続検査料</td>
+    <td class="price">&yen;6,300</td>
+    <td class="price">&yen;6,300</td>
+    <td class="price">&yen;6,300</td>
+    <td class="price">&yen;6,300</td>
+    <td class="price">&yen;6,300</td>
+    <td class="price">&yen;6,300</td>
+  </tr>
+  <tr>
+    <td rowspan="3" align="center">法定費用</td>
+    <td align="center">自賠責保険</td>
+    <td class="price">&yen;21,970</td>
+    <td class="price">&yen;24,950</td>
+    <td class="price">&yen;24,950</td>
+    <td class="price">&yen;24,950</td>
+    <td class="price">&yen;24,950</td>
+    <td class="price">&yen;14,190</td>
+  </tr>
+  <tr>
+    <td align="center">重量税</td>
+    <td class="price">&yen;7,600</td>
+    <td class="price">&yen;20,000</td>
+    <td class="price">&yen;30,000</td>
+    <td class="price">&yen;40,000</td>
+    <td class="price">&yen;50,000</td>
+    <td class="price">&yen;7,600</td>
+  </tr>
+  <tr>
+    <td align="center">印紙代</td>
+    <td class="price">&yen;1,100</td>
+    <td class="price">&yen;1,100</td>
+    <td class="price">&yen;1,100</td>
+    <td class="price">&yen;1,100</td>
+    <td class="price">&yen;1,100</td>
+    <td class="price">&yen;1,100</td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">車検総額</td>
+    <td class="price">&yen;53,770</td>
+    <td class="price">&yen;69,150</td>
+    <td class="price">&yen;79,150</td>
+    <td class="price">&yen;89,150</td>
+    <td class="price">&yen;99,150</td>
+    <td class="price">&yen;45,990</td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center" class="max"><span class="red bold">最大割引適用後金額</span></td>
+    <td class="price max"><span class="red bold">&yen;45,370</span></td>
+    <td class="price max"><span class="red bold">&yen;60,750</span></td>
+    <td class="price max"><span class="red bold">&yen;70,750</span></td>
+    <td class="price max"><span class="red bold">&yen;80,750</span></td>
+    <td class="price max"><span class="red bold">&yen;90,750</span></td>
+    <td class="price max"><span class="red bold">&yen;37,590</span></td>
+</tr>
+</table>
+<div class="price_box">
+<p>
+  <b>※輸入車はお引き受けできません。</b><br />
+※追加修理、部品交換等が必要な場合は、別途見積り・請求させていただきます。
+<br />
+※ダブルタイヤは＋5,250円?となります。
+<br />
+※改造車はお引き受けできない場合があります。
+<br />
+※車両によっては一部料金が異なる場合があります。
+</p>
+</div>
+
+      </li>
+    </ul>
+  </article>
+  <footer>
+    <a href="@action(controllers.Idex.index)"><div id="ftr_menu">コンテンツメニューへ戻る</div></a>
+  </footer>
+</section>
+</body>
+</html>

@@ -1,0 +1,286 @@
+body, section, header, nav, footer, h1, ul {
+    margin: 0;
+    padding: 0;
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    color: #333;
+    background-color: white;
+}
+body {
+  background: white url("/surv/public/images/bg_01.gif") 0px 0px repeat;
+}
+section {
+  width: 1024px;
+  height: 692px;
+  margin: auto;
+  padding: 0;
+}
+header {
+  height: 140px;
+  text-align: center;
+}
+header h1 {
+  padding: 0px;
+  font-size: 1.8em;
+   -webkit-text-stroke: 1px #013158;
+   color: #006ec7;
+   text-shadow:
+       2px 2px 2px #ccc,
+       1px 1px 0 #ccc;
+}
+nav {
+    width: 1024px;
+    height: 512px;
+    margin: auto;
+    /* background: url("/surv/public/images/stripe.png") repeat; */
+    background: 
+    -webkit-gradient(linear, left top, left bottom, from(#e3e3e3),  
+            color-stop(0.05, #ffffff),  
+            color-stop(0.5, #ffffff),  
+            color-stop(0.9, #ffffff),  
+            to(#ffffff));　/* Safari,Google Chrome用 */
+}
+nav div#blank {
+  width: 100%;
+  height: 32px;
+}
+nav div#main {
+  width: 720px;
+  height: 406px;
+  margin: auto;
+    -webkit-border-radius: 10px;
+    border: 3px solid #013158;
+}
+nav div#main div#menu_col {
+    width: 314px;
+    -webkit-border-radius: 10px;
+    border: 3px solid #013158;
+    text-align: center;
+    padding: 8px 5px;
+    font-size: 1.4em;
+}
+nav div#main li {
+    float: left;
+    list-style-type: none;
+    margin: 12px 15px;
+}
+nav div#main li a {
+    text-decoration: none; /* 下線を消す */
+    display: block; /* ブロックレベルに */
+    color: #333;
+}
+nav div#main li a:hover {
+    -webkit-border-radius: 10px;
+    /*    background-color: #013158; */
+    background: -webkit-gradient(linear, left top, left bottom, from(#03477f),  
+            color-stop(0.48, #1e5ea7),  
+            color-stop(0.5, #1e5ea7),  
+            color-stop(0.56, #013158),  
+            to(#013158));　/* Safari,Google Chrome用 */
+}
+nav div#main li a:hover div#menu_col {
+    color: white;
+}
+footer a {
+    text-decoration: none; /* 下線を消す */
+    display: block; /* ブロックレベルに */
+}
+#ftr_menu {
+  float: right;
+  width: 200px;
+  margin-top: 6px;
+  color: white;
+  text-align: center;
+    background: -webkit-gradient(linear, left top, left bottom, from(#03477f),  
+            color-stop(0.48, #1e5ea7),  
+            color-stop(0.5, #1e5ea7),  
+            color-stop(0.56, #013158),  
+            to(#013158));　/* Safari,Google Chrome用 */
+  
+}
+footer {
+    clear: both;
+  width: 1008px;
+  height: 24px;
+  margin: auto;
+  padding: 8px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff),  
+            color-stop(0.2, #e3e3e3),  
+            color-stop(0.4, #ffffff),  
+            color-stop(0.9, #ffffff),  
+            to(#e3e3e3));　/* Safari,Google Chrome用 */
+}
+article {
+  height: 512px;
+  text-align: center;
+}
+.feature_detail {
+  width: 530px;
+  padding-left: 74px;
+  float: left;
+  text-align: left;
+}
+.feature_detail p {
+  padding-bottom: 15px;
+  margin: 0;
+}
+.boldred {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+.feature_img {
+  float: right;
+  width: 250px;
+  text-align: right;
+  padding-right: 74px;
+}
+#header_title {
+  height: 75px;
+  padding-top: 14px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#dbeaff),  
+            color-stop(0.2, #dbeaff),  
+            color-stop(0.7, #ffffff),  
+            color-stop(0.9, #ffffff),  
+            to(#ffffff));　/* Safari,Google Chrome用 */
+}
+nav#header_menu {
+  margin: 0;
+  padding: 0;
+  height: 45px;
+  background: url("/surv/public/images/menu_bg.jpg") repeat-x;
+}
+nav#header_menu ul {
+  width: 710px;
+  margin: auto;
+}
+nav#header_menu li {
+    float: left;
+    list-style-type: none;
+    text-indent: -9999px;
+}
+nav#header_menu li a {
+    display: block; /* ブロックレベルに */
+}
+nav#header_menu li a:hover div {
+  background-position: 0 -45px;
+}
+#navi2 {
+  width: 166px;
+  height: 45px;
+  background-image: url("/surv/public/images/menu2.jpg");
+  background-repeat: no-repeat;
+  background-position-x: -1px;
+  margin: 0;
+}
+#navi3 {
+  width: 128px;
+  height: 45px;
+  background-image: url("/surv/public/images/menu3.jpg");
+  background-repeat: no-repeat;
+  margin: 0;
+}
+#navi4 {
+  width: 138px;
+  height: 45px;
+  background-image: url("/surv/public/images/menu4.jpg");
+  background-repeat: no-repeat;
+  margin: 0;
+}
+#navi6 {
+  width: 130px;
+  height: 45px;
+  background-image: url("/surv/public/images/menu6.jpg");
+  background-repeat: no-repeat;
+  margin: 0;
+}
+#navi7 {
+  width: 147px;
+  height: 45px;
+  background-image: url("/surv/public/images/menu7.jpg");
+  background-repeat: no-repeat;
+  margin: 0;
+}
+.navi_select {
+  background-position: 0 -45px;
+}
+.flow_left {
+  float: left;
+  width: 245px;
+  padding-left: 32px;
+}
+.flow_right {
+  float: right;
+  width: 625px;
+  text-align: left;
+  padding-right: 32px;
+}
+.flow_column h3 {
+  margin: 0;
+}
+.flow_column h3 img {
+  margin: 19px 0 5px 0;
+}
+.clear {
+  clear: both;
+  padding: 0;
+  margin: 0;
+}
+.price_box {
+  padding-left: 32px;
+}
+.price_box p {
+  text-align: left;
+  font-size: 12px;
+}
+/*price_data-----------------------------------------------------*/
+table.price_data{
+width:100%;
+margin:15px auto 10px auto;
+padding:0px 0px 0px 0px;
+text-align:center;
+border:1px solid #999;
+border-collapse:collapse;
+border-spacing:0px;
+}
+table.price_data th{
+font-size:14px;
+border:1px solid #999;
+background: url("/surv/public/images/price_th_back.jpg") repeat-x;
+color:#000;
+font-family:"ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+width:127px;
+padding:5px 0 10px 0;
+}
+table.price_data td{
+border:1px solid #999;
+font-size:12px;
+}
+table.price_data td.price{
+padding:0px 10px 0px 0px;
+font-size:12px;
+text-align:right;
+}
+table.price_data td.max{
+	background: #FFC;
+	font-size:14px;
+}
+table.price_data th{
+white-space:nowrap;
+font-weight:bold;
+}
+/*---------------------------------------------------*/
+.text1{font-size:11px; margin:10px 0 10px 0; line-height:160%;}
+.red {
+  color: red;
+}
+.bold {
+  font-weight: bold;
+}
+#cont_menu_hdr {
+  padding-left: 120px;
+  text-align: left;
+}
+#cont_ttl {
+  padding-right: 160px;
+  float: right;
+}

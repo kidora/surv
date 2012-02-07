@@ -45,16 +45,23 @@ POST    /surv/edit_term                         Sample.edit_term
 GET     /surv/gridfstest                        Testgfs.gridfstest
 GET     /surv/getgfs                            Testgfs.getgfs
 GET     /surv/getpath                           Testgfs.getpath
+GET     /surv/gcgeoloc                          Sample.gcgeoloc
 
 # WASH Demo
-GET     /surv/washadmin                             Wash.admin
-GET     /surv/washterm                              Wash.edit_term
-POST    /surv/washterm                              Wash.edit_term
-GET     /surv/washcont                              Wash.cont_edit_new
-POST    /surv/washcont                              Wash.cont_edit
-POST    /surv/washschedule                          Wash.sche_edit
-GET     /surv/wash                                   Wash.index
-POST    /surv/wash                                   Wash.index
+GET     /surv/washadmin                         Wash.admin
+GET     /surv/washterm                          Wash.edit_term
+POST    /surv/washterm                          Wash.edit_term
+GET     /surv/washcont                          Wash.cont_edit_new
+POST    /surv/washcont                          Wash.cont_edit
+POST    /surv/washschedule                      Wash.sche_edit
+GET     /surv/wash                              Wash.index
+POST    /surv/wash                              Wash.index
+
+# IDEX Services
+GET     /surv/idexmenu                          Idex.index
+GET     /surv/idexshaken                        Idex.shaken
+GET     /surv/idexflow                          Idex.flow
+GET     /surv/idexprice                         Idex.price
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

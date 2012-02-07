@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>webkit test</title>
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<style>
+html, body, div, figure, nav, ul, li {
+  margin: 0;
+  padding: 0;
+}
+nav {
+  display: block;
+}
+.slide-gallery {
+  width: 980px;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -webkit-transform: translateZ(0);
+  position: relative;
+  z-index: 1;
+}
+figure.gallery-content {
+  display: block;
+  width: 980px;
+  height: 665px;
+  margin-right: 62px;
+  padding: 24px 0 0;
+  position: relative;
+  z-index: 1;
+  float: left;
+  -webkit-transform: translateZ(0);
+  left: 0;
+}
+.paddle-nav li {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1003;
+}
+.paddle-nav li .arrow { position:absolute; top:10px; z-index:1003; display:block; height:660px; width:107px; padding:0 20px; -moz-opacity:0; opacity:0; filter:alpha(opacity=0); outline:none; z-index:1; cursor:pointer; *background-image:url(http://images.apple.com/jp/global/elements/blank.gif);
+	-webkit-transition:.25s opacity ease-out; -moz-transition:.25s opacity ease-out; transition:.25s opacity ease-out;
+}
+.paddle-nav li .arrow:hover { -moz-opacity:1; opacity:1; filter:alpha(opacity=100); }
+.paddle-nav li .arrow.prev { left:0; }
+.paddle-nav li .arrow.prev b { float:left; background:url(http://images.apple.com/v/macbookair/a/images/heronav_prev.png) no-repeat; }
+
+.paddle-nav li .arrow.next { right:0; }
+.paddle-nav li .arrow.next b { float:right; background:url(http://images.apple.com/v/macbookair/a/images/heronav_next.png) no-repeat; }
+
+.cont1 {
+   -webkit-transform: translate3d(0px, 0px, 0px);
+}
+.cont2 {
+   -webkit-transform: translate3d(-1042px, 0px, 0px);
+}
+.contz {
+  z-index: 1001;
+}
+</style>
+<script>
+$(function() {
+  $("#prev").click(function() {
+    $("#gall").addClass("contz");
+    $("#gall").removeClass("cont2");
+    $("#gall").addClass("cont1");
+    $("#gall").removeClass("contz");
+  });
+  $("#next").click(function() {
+    $("#gall").addClass("contz");
+    $("#gall").removeClass("cont1");
+    $("#gall").addClass("cont2");
+    $("#gall").removeClass("contz");
+  });
+});
+</script>
+</head>
+<body>
+  <div class="slide-gallery">
+    <div id="gall" style="width: 2084px; height: 689px; -webkit-transition: -webkit-transform 0.4s cubic-bezier(0,0,0.25,1);">
+      <figure class="gallery-content">
+        <hgroup>
+          <h1>h1title</h1>
+          <h2>h2subtitle</h2>
+        </hgroup>
+        <div>content 1</div>
+      </figure>
+      <figure class="gallery-content">
+        <hgroup>
+          <h1>h1title2</h1>
+          <h2>h2subtitle2</h2>
+        </hgroup>
+        <div>content 2</div>
+      </figure>
+    </div>
+    <nav class="paddle-nav">
+      <ul>
+        <li>
+          <a class="arrow prev" href="#prev" onclick="return false">
+          <b id="prev">prev</b>
+          </a>
+        </li>
+        <li>
+          <a class="arrow next" href="#next" onclick="return false">
+          <b id="next">next</b>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</body>
+</html>

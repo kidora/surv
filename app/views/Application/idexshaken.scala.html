@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, height=692, initial-scale=1.0, user-scalable=no">
+<title>IDEX | イデックス車検</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/idex.css">
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery.flickable-1.0b3-jq1.6.js"></script>
+<style type="text/css">
+#shaken {
+    overflow: hidden;
+}
+#shaken ul {
+        list-style: none;
+        width:4800px;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        -webkit-transition: -webkit-transform 0.4s cubic-bezier(0,0,0.25,1);
+      }
+      #shaken ul li {
+  display: block;
+        width: 960px;
+        margin: 0;
+        padding: 0;
+  position: relative;
+  z-index: 1;
+  float: left;
+  -webkit-transform: translateZ(0);
+      }
+      #flickable2 .block {
+        color: #FFF;
+        width: 435px;
+        height: 110px;
+        padding: 5px;
+      }
+      #flickable2 h4 {
+        color: #FFF;
+      }
+      #flickable2 .ui-flickable-container {
+        cursor: pointer;
+      }
+.cont1 {
+   -webkit-transform: translate3d(0px, 0px, 0px);
+}
+.cont2 {
+   -webkit-transform: translate3d(-960px, 0px, 0px);
+}
+.cont3 {
+   -webkit-transform: translate3d(-1920px, 0px, 0px);
+}
+.cont4 {
+   -webkit-transform: translate3d(-2880px, 0px, 0px);
+}
+.cont5 {
+   -webkit-transform: translate3d(-3840px, 0px, 0px);
+}
+.contz {
+  z-index: 1001;
+}
+.wait {
+  position: absolute; top: 0; left: 0; z-index: 100; width: 824px; height: 492px; margin: 0 auto; padding: 100px;
+  color: #333; background: #ddd; font-size: 1.6em;
+  text-align: center;
+}
+.hidden {
+  visibility: hidden;
+}
+footer ul li {
+  float: left;
+}
+    </style>
+<script>
+$(function() {
+//  $('#shaken').flickable({section:'li'});
+var page = 1;
+  $("#prev").click(function() {
+    if (page>1) {
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page-1));
+      $("#shaken ul").removeClass("contz");
+      page--;
+    }
+  });
+  $("#next").click(function() {
+    if(page<5) { 
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page+1));
+      $("#shaken ul").removeClass("contz");
+      page++;
+    }
+  });
+  var shk = $("#shaken")[0];
+  shk.addEventListener("touchstart", touchHandler, false);
+
+  shk.addEventListener("touchmove", touchHandler, false);
+
+  shk.addEventListener("touchend", touchHandler, false);
+  
+function touchHandler(e) {
+    e.preventDefault();
+    var touch = e.touches[0];
+    if (e.type == "touchstart") {
+        startX = touch.pageX;
+    } else if (e.type == "touchmove") {
+        diffX = touch.pageX - startX;
+    } else if (e.type == "touchend") {
+        if (diffX > 100) {
+    if (page>1) {
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page-1));
+      $("#shaken ul").removeClass("contz");
+      page--;
+    }
+  } else if (diffX < -100) {
+    if(page<5) { 
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page+1));
+      $("#shaken ul").removeClass("contz");
+      page++;
+    }
+        }
+    }
+}
+
+  $(window).load(function() {
+    $("#wait").addClass("hidden");
+  });
+});
+</script>
+</head>
+<body>
+<section>
+  <p id="wait" class="wait">Now Loading...<br>Please wait a minute.</p>
+  <header>
+    <!-- span style="width:300;height: 3em; font-size:1.4em;font-weight: bold;
+   -webkit-text-stroke: 1px #c00;
+   color: red;
+   text-shadow:
+       2px 2px 2px #ccc,
+     -1px -1px 0 #fff,
+      1px -1px 0 #fff,
+      -1px 1px 0 #fff,
+       1px 1px 0 #ccc;">IDEX</span -->
+      <div id="header_title">
+        <div id="hdr_imgs">
+          <img src="/surv/public/images/rogo.jpg">
+          <img src="/surv/public/images/top_catch.jpg">
+        </div>
+      </div>
+    <nav id="header_menu">
+      <ul>
+        <li><div id="navi2" class="navi_select">イデックス車検の特徴</div></li>
+        <li><a href="@action(controllers.Idex.flow)"><div id="navi3">イデックス車検お申し込み手順</div></a></li>
+        <li><a href="@action(controllers.Idex.price)"><div id="navi4">イデックス車検の特典＆料金表</div></a></li>
+        <li><a href="https://fukuoka.idexshaken.com/estimate.php"><div id="navi6">お見積もり</div></a></li>
+        <li><a href="https://fukuoka.idexshaken.com/reserve.php"><div id="navi7">ご予約</div></a></li>
+      </ul>
+        
+    </nav>
+  </header>
+  <article id="shaken">
+    <ul>
+      <li>
+        <img src="/surv/public/images/sub_feature.jpg">
+        <img src="/surv/public/images/feature_top_img.jpg">
+      </li>
+      <li>
+        <img src="/surv/public/images/feature_title01.jpg">
+        <div class="feature_detail">
+          <p></p>
+          <p>　一般的な車検サービスは「陸運局」に車を持っていき、車検を依頼するケースが多いのですが、</p>
+          <p class="boldred">当社は国土交通省の認可を受けた自社車検工場で車検を行います。</p>
+          <p>車検の最終テストをできるこれらの工場を<span class="boldred">「指定工場」</span> と言います。
+            この指定工場は<span class="boldred">国から車検の「委託」を受けた工場</span>です。</p>
+          <p>この「指定工場」の認可を受けるには技術力だけでなく、機械設備、車検の実績が必要です。</p>
+          <p><span class="boldred">イデックス車検は年間３０，０００台の車検を実施</span>していること、
+            また、実際に検査にあたる<span class="boldred">「検査員」等の技術者を多数抱えている</span>ことなど、
+            厳しい基準を全てクリアしています。</p>
+        </div>
+        <div class="feature_img">
+        <img src="/surv/public/images/feature_ph02.jpg">
+        <img src="/surv/public/images/feature_ph03.jpg">
+        </div>
+      </li>
+      <li>
+        <img src="/surv/public/images/feature_title02.jpg">
+        <div class="feature_detail">
+          <p><b>（１）無駄な整備をしないから安い！</b></p>
+          <p>車検費用が高くなってしまう原因としては【余分な整備】【整備・部品料金の高さ】が挙げられます。
+もちろん、「安いだけの車検」は整備がないため、 
+安全に乗っていただくことを考えるとお勧めできません。
+お客様のご予算に応じて整備項目をきちんと提案することが大切であると私たちは考えています。</p>
+          <p><b>（２）お客様のご協力次第で安くなる割引制度！</b></p>
+          <p>
+料金表を見ていただいてお分かりになると思いますが、 
+当社の車検は「超格安！」をうたい文句にする車検ではありません。
+それは“お客様が安心して車に乗り続けられるような確実な整備”をモットーとしているからです。
+<p>
+例えば・・・
+□ネットで予約をする 
+□車検工場へ直接お車をお持ち込み、引き取っていただく 
+□代車を使わない 
+□早めに予約する
+以上の手間をかけることで7000円も料金が下がるのです。</p>
+        </div>
+        <div class="feature_img">
+        <img src="/surv/public/images/feature_ph04.jpg">
+        <img src="/surv/public/images/feature_ph08.jpg">
+        </div>
+      </li>
+      <li>
+        <img src="/surv/public/images/feature_title03.jpg">
+        <div class="feature_detail">
+          <p>『最初に聞いた金額より車検代が高くなった』こんな経験をされたことはありませんか？これには主に２つの原因があります。</p>
+          <p>（１）チラシには車検9,800円！と書いてあるのに、そのほかに代行料や点検料など様々な名目の費用をとられてしまった。</p>
+          <p>（２）基本料金だけ教えられて車検に出したら工場から電話がかかってきて「○○を交換しなければ車検に合格しない」と言われた。</p>
+          <p>こういうことが行われていたのでは『車検料金が不透明』で、一体いくら用意しなければならないのか不安になりますよね。目の前にない車のあの部品が悪いと言われても確かめる術がありません。</p>
+          <p>そこで私たちは・・・<br>
+            <span class="boldred">『車検実施前に確定した金額を提示する』</span><br>
+            <span class="boldred">『整備箇所はお客様と一緒に確認する』</span><br>
+            ことを徹底しています。</p>
+        </div>
+        <div class="feature_img">
+        <img src="/surv/public/images/feature_ph09.jpg">
+        <img src="/surv/public/images/feature_ph10.jpg">
+        </div>
+      </li>
+      <li>
+        <img src="/surv/public/images/feature_title04.jpg">
+        <div class="feature_detail">
+          <p>イデックスは福岡、北九州、佐賀、久留米に合計４０ヶ所以上のガソリンスタンドのネットワークがあります。</p>
+          <p>お客様はいつも利用していただいているガソリンスタンドまでお車をお持ちいただければ、１日で車検を完了させてお車をお渡ししています。そのため下記のようなお客様も多数いらっしゃいます。</p>
+          <p><img src="/surv/public/images/feature_case.gif"></p>
+          <p>これならお客様が実際に【車検が終わるのを待っている】無駄な時間がありませんので、とても便利ですよね。</p>
+          <p>福岡、北九州、佐賀、久留米エリアに指定工場を４ヶ所保有するイデックスでは、平日はもちろん、<span class="boldred">土日も１日車検が可能</span>です。</p>
+        </div>
+        <div class="feature_img">
+          <img src="/surv/public/images/feature_ph12.jpg">
+        </div>
+      </li>
+    </ul>
+  </article>
+</div>
+  <footer>
+    <!-- ul>
+        <li>
+          <a class="arrow prev" href="#prev" onclick="return false">
+          <b id="prev">prev</b>
+          </a>
+        </li>
+        <li>
+          <a class="arrow next" href="#next" onclick="return false">
+          <b id="next">next</b>
+          </a>
+        </li>
+      </ul -->
+    <a href="@action(controllers.Idex.index)"><div id="ftr_menu">コンテンツメニューへ戻る</div></a>
+  </footer>
+</section>
+</body>
+</html>

@@ -21,7 +21,14 @@ object Sample extends Controller {
     
     def reversi = html.reversi()
     
+    // Google Maps APIs sample
     def geolocation = html.geoloc()
+    def gcgeoloc = html.gcgeocoder()
+    def geotest = {
+      val address = "福岡県福岡市中央区"
+      val rs = scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/json?address="+address+"&language=ja&sensor=false").mkString
+      scala.util.parsing.json.JSON.parseFull(rs)
+    }
     
     def load = {
       val lat = params.get("lat").toDouble
@@ -111,5 +118,8 @@ object Sample extends Controller {
         } */
       Redirect("/surv/admin?mode=term")
     }
-        
+    
+    def vflick = html.vflick()
+
+    def wktest = html.webkit()
 }

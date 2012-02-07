@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, height=692, initial-scale=1.0, user-scalable=no">
+<title>IDEX | イデックス車検お申し込み手順</title>
+<link rel="stylesheet" media="screen" href="/surv/public/stylesheets/idex.css">
+<script type="text/javascript" src="/surv/public/javascripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/surv/public/javascripts/jquery.flickable-1.0b3-jq1.6.js"></script>
+<style type="text/css">
+#shaken {
+  overflow: hidden;
+}
+#shaken ul {
+  list-style: none;
+  width:958px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0,0,0.25,1);
+}
+#shaken ul li {
+  display: block;
+  width: 958px;
+  height: 512px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  float: left;
+  -webkit-transform: translateZ(0);
+}
+.cont1 {
+   -webkit-transform: translate3d(0px, 0px, 0px);
+}
+.cont2 {
+   -webkit-transform: translate3d(0px, -512px, 0px);
+}
+.cont3 {
+   -webkit-transform: translate3d(0px, -1024px, 0px);
+}
+.cont4 {
+   -webkit-transform: translate3d(0px, -1536px, 0px);
+}
+.contz {
+  z-index: 1001;
+}
+.wait {
+  position: absolute; top: 0; left: 0; z-index: 100; width: 824px; height: 492px; margin: 0 auto; padding: 100px;
+  color: #333; background: #ddd; font-size: 1.6em;
+  text-align: center;
+}
+.hidden {
+  visibility: hidden;
+}
+</style>
+<script>
+$(function() {
+//  $('#shaken').flickable({section:'li'});
+var page = 1;
+  $("#prev").click(function() {
+    if (page>1) {
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page-1));
+      $("#shaken ul").removeClass("contz");
+      page--;
+    }
+  });
+  $("#next").click(function() {
+    if(page<3) { 
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page+1));
+      $("#shaken ul").removeClass("contz");
+      page++;
+    }
+  });
+  var shk = $("#shaken")[0];
+  shk.addEventListener("touchstart", touchHandler, false);
+
+  shk.addEventListener("touchmove", touchHandler, false);
+
+  shk.addEventListener("touchend", touchHandler, false);
+  
+function touchHandler(e) {
+    e.preventDefault();
+    var touch = e.touches[0];
+    if (e.type == "touchstart") {
+        startY = touch.pageY;
+    } else if (e.type == "touchmove") {
+        diffY = touch.pageY - startY;
+    } else if (e.type == "touchend") {
+        if (diffY > 60) {
+    if (page>1) {
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page-1));
+      $("#shaken ul").removeClass("contz");
+      page--;
+    }
+  } else if (diffY < -60) {
+    if(page<4) { 
+      $("#shaken ul").addClass("contz");
+      $("#shaken ul").removeClass("cont"+page);
+      $("#shaken ul").addClass("cont"+(page+1));
+      $("#shaken ul").removeClass("contz");
+      page++;
+    }
+        }
+    }
+  }
+  $(window).load(function() {
+    $("#wait").addClass("hidden");
+  });
+});
+</script>
+</head>
+<body>
+<section>
+  <p id="wait" class="wait">Now Loading...<br>Please wait a minute.</p>
+  <header>
+    <!-- span style="width:300;height: 3em; font-size:1.4em;font-weight: bold;
+   -webkit-text-stroke: 1px #c00;
+   color: red;
+   text-shadow:
+       2px 2px 2px #ccc,
+     -1px -1px 0 #fff,
+      1px -1px 0 #fff,
+      -1px 1px 0 #fff,
+       1px 1px 0 #ccc;">IDEX</span -->
+      <div id="header_title">
+        <div id="hdr_imgs">
+          <img src="/surv/public/images/rogo.jpg">
+          <img src="/surv/public/images/top_catch.jpg">
+        </div>
+      </div>
+    <nav id="header_menu">
+      <ul>
+        <li><a href="@action(controllers.Idex.shaken)"><div id="navi2">イデックス車検の特徴</div></a></li>
+        <li><div id="navi3" class="navi_select">イデックス車検お申し込み手順</div></li>
+        <li><a href="@action(controllers.Idex.price)"><div id="navi4">イデックス車検の特典＆料金表</div></a></li>
+        <li><a href="https://fukuoka.idexshaken.com/estimate.php"><div id="navi6">お見積もり</div></a></li>
+        <li><a href="https://fukuoka.idexshaken.com/reserve.php"><div id="navi7">ご予約</div></a></li>
+      </ul>
+        
+    </nav>
+  </header>
+  <article id="shaken">
+  <ul>
+    <li>
+<img src="/surv/public/images/sub_flow.jpg" alt="イデックス車検お申込み手順" width="896" height="36" class="spt20" />
+<!--FLOW_COLUMN-BEGIN-->
+<div class="flow_column">
+<div class="flow_left"><img src="/surv/public/images/s_flow_step1.jpg" alt="STEP1" width="245" height="160" /></div>
+<div class="flow_right">
+<h3><img src="/surv/public/images/flow_title01.jpg" alt="いつでもご予約OK" width="619" height="28" /></h3>
+<div class="spt8"><img src="/surv/public/images/flow01_net.gif" alt="インターネットから予約" width="165" height="22" /></div>
+<p>イデックス車検ホームページのネット予約、もしくはお見積りフォームに必要事項をご記入のうえ、送信して下さい。 <br />
+  折り返し、車検担当者からメールまたはお電話でご連絡させていただきます。 </p>
+<div class="spt16"><img src="/surv/public/images/flow01_tel.gif" alt="電話の場合" width="89" height="22" /></div>
+<p><a href="https://fukuoka.idexshaken.com/shop.html">イデックス車検受付店一覧</a>からご利用店舗宛にご連絡下さい。</p>
+</div>
+<div class="clear"></div>
+<div class="spt20"><img src="/surv/public/images/flow_arrow.jpg" alt="" width="152" height="45" /></div>
+</div>
+<!--FLOW_COLUMN-END-->
+</li>
+<li>
+<!--FLOW_COLUMN-BEGIN-->
+<div class="flow_column">
+<div class="flow_left"><img src="/surv/public/images/s_flow_step2.jpg" alt="STEP2" width="245" height="160" /></div>
+<div class="flow_right">
+<h3><img src="/surv/public/images/flow_title02.jpg" alt="事前点検（車検実施の当日～1ヶ月前）" width="619" height="28" /></h3>
+  <p>車検に合格するために必要な点検作業をお客様の立会いのもと実施いたします。不具合箇所につきましてはご一緒に確認しながら丁寧にご説明いたします。<br />
+    (所要時間は30分ほど) </p>
+  </div>
+<div class="clear"></div>
+<div class="spt20"><img src="/surv/public/images/flow_arrow.jpg" alt="" width="152" height="45" /></div>
+</div>
+<!--FLOW_COLUMN-END-->
+<!--FLOW_COLUMN-BEGIN-->
+<div class="flow_column">
+<div class="flow_left"><img src="/surv/public/images/s_flow_step3.jpg" alt="STEP3" width="245" height="160" /></div>
+<div class="flow_right">
+<h3><img src="/surv/public/images/flow_title03.jpg" alt="お見積り提示（車検実施の当日～1ヶ月前）" width="619" height="28" /></h3>
+  <p>事前点検の結果を踏まえて、お客様の乗り方に合った見積もり額をご提示します。ご予算によってできる限り整備内容などを考慮しますので、お気軽にご相談下さい。 <br />
+    もちろんこの時点でキャンセルも可能です。 </p>
+  </div>
+<div class="clear"></div>
+<div class="spt20"><img src="/surv/public/images/flow_arrow.jpg" alt="" width="152" height="45" /></div>
+</div>
+<!--FLOW_COLUMN-END-->
+</li>
+<li>
+<!--FLOW_COLUMN-BEGIN-->
+<div class="flow_column">
+<div class="flow_left"><img src="/surv/public/images/s_flow_step4.jpg" alt="STEP4" width="245" height="160" /></div>
+<div class="flow_right">
+<h3><img src="/surv/public/images/flow_title04.jpg" alt="車検実施（車検当日）" width="619" height="28" /></h3>
+  <p>車検当日（または前日）にお客様のお車をお預かりいたします。 <br />
+    代車もご用意しておりますので、お気軽にお申し付け下さい。 <br />
+    （代車は事前予約制です） <br />
+    ※車検は車検満了日の30日前から受けられます。 </p>
+  </div>
+<div class="clear"></div>
+<div class="spt20"><img src="/surv/public/images/flow_arrow.jpg" alt="" width="152" height="45" /></div>
+</div>
+<!--FLOW_COLUMN-END-->
+<!--FLOW_COLUMN-BEGIN-->
+<div class="flow_column">
+<div class="flow_left"><img src="/surv/public/images/s_flow_step5.jpg" alt="STEP5" width="245" height="160" /></div>
+<div class="flow_right">
+<h3><img src="/surv/public/images/flow_title05.jpg" alt="車両検査・整備" width="619" height="28" /></h3>
+  <p>当社の整備工場にて、国家資格整備士が法定24ヶ月点検、および車検見積り時にご提示した必要な整備を行います。 </p>
+</div>
+<div class="clear"></div>
+<div class="spt20"><img src="/surv/public/images/flow_arrow.jpg" alt="" width="152" height="45" /></div>
+</div>
+<!--FLOW_COLUMN-END-->
+</li>
+<li>
+<!--FLOW_COLUMN-BEGIN-->
+<div class="flow_column">
+<div class="flow_left"><img src="/surv/public/images/s_flow_step6.jpg" alt="STEP6" width="245" height="160" /></div>
+<div class="flow_right">
+<h3><img src="/surv/public/images/flow_title06.jpg" alt="ご精算・引き渡し" width="619" height="28" /></h3>
+  <p>車検実施当日にお引き渡しいたします。 <br />
+    何か気になる点がございましたら何なりとお申し付け下さい。 <br />
+    なお、お支払いにつきましては、現金、クレジットどちらでも可能です。 </p>
+  </div>
+</div>
+<!--FLOW_COLUMN-END-->
+</li>
+</ul>
+
+  </article>
+  <footer>
+    <a href="@action(controllers.Idex.index)"><div id="ftr_menu">コンテンツメニューへ戻る</div></a>
+  </footer>
+</section>
+</body>
+</html>
