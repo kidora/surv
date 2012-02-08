@@ -10,7 +10,7 @@ body {
 }
 section {
   width: 1024px;
-  height: 692px;
+  height: 748px;
   margin: auto;
   padding: 0;
 }
@@ -29,7 +29,7 @@ header h1 {
 }
 nav {
     width: 1024px;
-    height: 512px;
+    height: 568px;
     margin: auto;
     /* background: url("/surv/public/images/stripe.png") repeat; */
     background: 
@@ -110,7 +110,7 @@ footer {
             to(#e3e3e3));　/* Safari,Google Chrome用 */
 }
 article {
-  height: 512px;
+  height: 568px;
   text-align: center;
 }
 .feature_detail {
