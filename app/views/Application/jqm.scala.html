@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <title>jQuery mobile & Google maps plugin test</title>
+  <meta charset="utf-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link type="text/css" rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+  <link type="text/css" rel="stylesheet" href="/surv/public/stylesheets/jquery.mobile.actionsheet.css" />
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&libraries=places"></script> 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/surv/public/javascripts/jquery.ui.map.full.min.js"></script>
+  <script type="text/javascript" src="/surv/public/javascripts/jquery.mobile.actionsheet.js"></script>
+  <!-- script type="text/javascript" src="/surv/public/javascripts/jquery.mobile.subpage.js"></script -->
+  <script type="text/javascript">
+  $(function() {
+    // 表示しているマーカー
+    var mkary = [];
+    // 新規マーカー
+    var nwmarker;
+    // 固定ツールバーのタップによる表示切替をしない
+    $.mobile.fixedToolbars.setTouchToggleEnabled(false);
+    // コンテンツ表示部の高さを設定
+    $('[data-role=content]').height(
+      $('.ui-mobile-viewport').height() - 
+      (4 + $('[data-role=header]').height() 
+      + $('[data-role=footer]').height())
+    );
+
+		navigator.geolocation.getCurrentPosition(function(pos) {
+			var cds = pos.coords;
+      console.log(
+        "緯度: " + cds.latitude,
+        "経度: " + cds.longitude
+      );
+      $("#lat").val(cds.latitude);
+      $("#lng").val(cds.longitude);
+      
+      var latlng = new google.maps.LatLng(cds.latitude,cds.longitude);
+      $("#map_canvas").gmap().bind('init', function(e, map) {
+        $("#map_canvas").gmap('option', 'center', latlng);
+        $("#map_canvas").gmap('option', 'zoom', 15);
+        var bnds = map.getBounds();
+        $("#nelat").val(bnds.getNorthEast().lat());
+        $("#nelng").val(bnds.getNorthEast().lng());
+        $("#swlat").val(bnds.getSouthWest().lat());
+        $("#swlng").val(bnds.getSouthWest().lng());
+        $('#map_canvas').gmap('addMarker', {
+          'position': latlng
+          }, function(map, marker) {
+            $('#map_canvas').gmap('search', {
+              'location': marker.getPosition()
+            }, function(results, status) {
+		          if ( status === 'OK' ) {
+                console.log("Location found!");
+			          $.each(results[0].address_components, function(i,v) {
+				          if ( v.types[0] == "administrative_area_level_1" || 
+					            v.types[0] == "administrative_area_level_2" ) {
+					          $('#state'+marker.__gm_id).val(v.long_name);
+				          } else if ( v.types[0] == "country") {
+					          $('#country'+marker.__gm_id).val(v.long_name);
+				          }
+                  console.log(
+                    "findLocation:"+v.types[0]+":"+v.long_name
+                  );
+			          });
+			          marker.setTitle(results[0].formatted_address.replace("日本, ",""));
+                console.log(results[0].formatted_address);
+			          $('#address'+marker.__gm_id).val(results[0].formatted_address);
+                $("#entry_sheet #address").val(results[0].formatted_address.replace("日本, ",""));
+		          }
+	          });
+          }).click(function() {
+          $('#map_canvas').gmap('openInfoWindow', {'content': '現在地'}, this);
+        });
+        $(map).click(function(e) {
+          $("#map_canvas").gmap('addMarker', {
+            'position': e.latLng,
+            'draggable': true,
+            'bounds': false
+          }, function(map, marker) {
+            nwmarker = marker;
+            $('#dialog').append('<form id="dialog'+marker.__gm_id+'" method="get" action="/" style="display:none;" data-rel="dialog"><p><label for="country">Country</label><input id="country'+marker.__gm_id+'" class="txt" name="country" value=""/></p><p><label for="state">State</label><input id="state'+marker.__gm_id+'" class="txt" name="state" value=""/></p><p><label for="address">Address</label><input id="address'+marker.__gm_id+'" class="txt" name="address" value=""/></p><p><label for="comment">Comment</label><textarea id="comment" class="txt" name="comment" cols="40" rows="5"></textarea></p></form>');
+			      findLocation(marker.getPosition(), marker);
+          }).dragend( function(event) {
+			      findLocation(event.latLng, this);
+		      }).click( function() {
+			      openDialog(this);
+		      });
+        });
+        
+        function findLocation(location, marker) {
+          console.log("findLocation");
+          $('#map_canvas').gmap('search', {'location': location}, function(results, status) {
+		        if ( status === 'OK' ) {
+              console.log("Location found!");
+			        $.each(results[0].address_components, function(i,v) {
+				        if ( v.types[0] == "administrative_area_level_1" || 
+					          v.types[0] == "administrative_area_level_2" ) {
+					        $('#state'+marker.__gm_id).val(v.long_name);
+				        } else if ( v.types[0] == "country") {
+					        $('#country'+marker.__gm_id).val(v.long_name);
+				        }
+                console.log(
+                  "findLocation:"+v.types[0]+":"+v.long_name
+                );
+			        });
+			        marker.setTitle(results[0].formatted_address.replace("日本, ",""));
+              console.log(results[0].formatted_address.replace("日本, ",""));
+			        $('#address'+marker.__gm_id).val(results[0].formatted_address.replace("日本, ",""));
+                $("#entry #address").val(results[0].formatted_address.replace("日本, ",""));
+			        openDialog(marker);
+		        }
+	        });
+          
+        }
+
+        function openDialog(marker) {
+          console.log("openDialog"+marker.__gm_id);
+          $.mobile.changePage('#entry', {});
+        }
+      });
+    }); // navigator.geolocation.getCurrentPosition
+    
+    // 現在地から検索
+    $("#sfh").click(function() {
+      console.log(mkary.length);
+      for (var c in mkary) {
+        mkary[c].setMap(null);
+      }
+      mkary = [];
+      console.log(mkary.length);
+      $.getJSON('@action(controllers.Sample.jqm_get)', {
+        'lat': $("#lat").val(),
+        'lng': $("#lng").val(),
+        'nelat': $("#nelat").val(),
+        'nelng': $("#nelng").val(),
+        'swlat': $("#swlat").val(),
+        'swlng': $("#swlng").val()
+      }, function(json){
+        for (var i in json) {
+          console.log("name:"+json[i].name+"lat:"+json[i].lat+" lng:"+json[i].lng);
+          $("#map_canvas").gmap('addMarker', {
+            'position': new google.maps.LatLng(json[i].lat, json[i].lng),
+            'bounds': false
+            }, function(map, marker) {
+              mkary.push(marker);
+            }
+          );
+        }
+        console.log(mkary.length);
+//        var latlng = new google.maps.LatLng($("#lat").val(),$("#lng").val());
+        $("#map_canvas").gmap('option', 'center', new google.maps.LatLng($("#lat").val(),$("#lng").val()));
+        $("#map_canvas").gmap('option', 'zoom', 15);
+      });
+    });
+    
+    // 検索
+    $("#search").click(function() {
+      for (var c in mkary) {
+        mkary[c].setMap(null);
+      }
+      mkary = [];
+      $.getJSON('@action(controllers.Sample.jqm_get)', {
+        'area': $("#area").val(),
+        'keyword': $("#keyword").val()
+      }, function(json){
+        for (var i in json) {
+          console.log("name:"+json[i].name+"lat:"+json[i].lat+" lng:"+json[i].lng);
+          $("#map_canvas").gmap('addMarker', {
+            'position': new google.maps.LatLng(json[i].lat, json[i].lng),
+            'bounds': false
+            }, function(map, marker) {
+              mkary.push(marker);
+            }
+          );
+        }
+        console.log(mkary.length);
+        $.mobile.changePage('#mappage', {});
+      });
+    });
+    
+    // 地点登録削除
+    $("#rmnewmk").click(function() {
+      nwmarker.setMap(null);
+      nwMarker=null;
+      $.mobile.changePage('#mappage', {});
+    });
+  });
+  </script>
+</head>
+<body>
+  <!-- #mappage _Begin_ -->
+  <div data-role="page" id="mappage" style="height: 100%;">
+    <header data-id="persistHeader" data-role="header" data-position="fixed">
+      <h1>Location Search</h1>
+      <a href="#entry" data-icon="plus" class="ui-btn-right">地点登録</a>
+    </header><!-- /header -->
+    <div data-role="content" style="padding: 0;">
+      <div id="map_canvas" style="width:100%; height:100%;"></div>
+    </div><!-- /content -->
+    <footer data-id="persistBar" data-role="footer" data-position="fixed">
+      <div data-role="navbar">
+        <ul>
+          <li><a href="#cond" data-icon="search" class="ui-state-persist">検索</a></li>
+          <li><a id="sfh" data-icon="search" onClick="return false;">現在地から検索</a>
+            <!-- div style="padding: 10px;">
+              <h3>ActionSheetプラグインテスト</h3>
+              <p>テストでアクションシートを表示してみよう</p>
+              <a href="#" data-rel="close" data-role="button">閉じる</a>
+            </div -->
+          </li>
+          <li><a data-role="actionsheet" data-icon="plus" data-sheet="entry_sheet">現在地を登録</a></li>
+        </ul>
+      </div><!-- /navbar -->
+    </footer><!-- /footer -->
+  </div><!-- #mappage/page -->
+  <!-- #mappage __End__ -->
+  <!-- jQuery Mobile Quick Start _Begin_ -->
+  <div data-role="page" id="cond">
+    <header data-id="persistHeader" data-role="header" data-position="fixed">
+      <h1>Location Search</h1>
+      <a href="#mappage" data-icon="delete" class="ui-btn-right">キャンセル</a>
+    </header><!-- /header -->
+    <div data-role="content">
+      <form action="" method="post">
+        <ul data-role="listview" data-split-icon="gear">
+          <li>
+            <label for="keyword">キーワード(名称から検索)</label>
+            <input id="keyword" name="keyword" type="text" placeholder="キーワード" />
+          </li>
+          <li>
+            <label for="area">エリア(住所から検索)</label>
+            <input id="area" name="area" type="text" placeholder="エリア" />
+          </li>
+          <li>
+            <input type="button" value="検　索" id="search" data-theme="" />
+          </li>
+        </ul>
+      </form>
+    </div><!-- /content -->
+    <!-- footer data-id="persistBar" data-role="footer" data-position="fixed">
+      <div data-role="navbar">
+        <ul>
+          <li><a href="#page1" data-icon="search" class="ui-state-persist ui-btn-active">検索</a></li>
+          <li><a href="#" data-icon="search">現在地から検索</a></li>
+          <li><a href="#entry" data-icon="plus" data-transition="slideup" class="ui-state-persist">現在地を登録</a></li>
+        </ul>
+      </div><!-- /navbar --
+    </footer><!-- /footer -->
+  </div><!-- /page -->
+  <!-- jQuery Mobile Quick Start __End__ -->
+  <!-- jQuery Mobile Listview _Begin_ -->
+  <div data-role="page" data-auto-back-btn="true" id="entry">
+    <header data-id="persistHeader" data-role="header" data-position="fixed">
+      <h1>地点登録</h1>
+      <a href="#mappage" data-icon="delete" class="ui-btn-right">キャンセル</a>
+    </header><!-- /header -->
+    <div data-role="content">
+      <form action="@action(controllers.Sample.jqm_entry)" method="post" data-ajax="false">
+        <div data-role="fieldcontain" class="ui-hide-label">
+          <label for="name">名　称</label>
+          <input id="name" name="name" type="text" placeholder="名称" />
+          <label for="address">住　所</label>
+          <input id="address" name="address" type="text" placeholder="住所" />
+          <label for="tel">電話番号</label>
+          <input id="tel" name="tel" type="tel" placeholder="電話番号" />
+          <label for="email">メールアドレス</label>
+          <input id="email" name="email" type="email" placeholder="メールアドレス" />
+          <div class="ui-grid-a">
+            <div class="ui-block-a">
+              <input type="button" id="rmnewmk" value="削除" />
+            </div>
+            <div class="ui-block-b">
+              <input type="submit" value="登録" data-theme="a" />
+            </div>
+          </div><!-- .ui-grid-a -->
+        </div>
+      </form>
+    </div><!-- /content -->
+    <!-- footer data-id="persistBar" data-role="footer" data-position="fixed">
+      <div data-role="navbar">
+        <ul>
+          <li><a href="#" data-icon="search">検索</a></li>
+          <li><a href="#" data-icon="search">現在地から検索</a></li>
+          <li><a href="#entry" data-icon="plus" data-transition="slideup" class="ui-state-persist ui-btn-active">現在地を登録</a></li>
+        </ul>
+      </div><-- /navbar ->
+    </footer><-- /footer -->
+  </div><!-- #entry/page -->
+  <div data-role="page" id="editdlg" data-theme="e">
+    <header data-role="header" data-theme="e">
+      <h1>地点登録</h1>
+    </header>
+    <div data-role="content" data-theme="d" id="dialog"></div>
+  </div><!-- #dialog/page -->
+  <div data-role="page">
+      <div id="entry_sheet" style="padding: 10px 20px 10px 10px;">
+      <form action="@action(controllers.Sample.jqm_entry)" method="post" data-ajax="false">
+        <div data-role="fieldcontain" class="ui-hide-label">
+          <label for="name">名　称</label>
+          <input id="name" name="name" type="text" placeholder="名称" />
+          <label for="address">住　所</label>
+          <input id="address" name="address" type="text" placeholder="住所" />
+          <label for="tel">電話番号</label>
+          <input id="tel" name="tel" type="tel" placeholder="電話番号" />
+          <label for="email">メールアドレス</label>
+          <input id="email" name="email" type="email" placeholder="メールアドレス" />
+          <label for="lat">latitude</label>
+          <input id="lat" name="lat" type="hidden" />
+          <label for="lng">longitude</label>
+          <input id="lng" name="lng" type="hidden" />
+          <label for="nelat">latitude</label>
+          <input id="nelat" name="nelat" type="hidden" />
+          <label for="nelng">longitude</label>
+          <input id="nelng" name="nelng" type="hidden" />
+          <label for="swlat">latitude</label>
+          <input id="swlat" name="swlat" type="hidden" />
+          <label for="swlng">longitude</label>
+          <input id="swlng" name="swlng" type="hidden" />
+          <div class="ui-grid-a">
+            <div class="ui-block-a">
+              <input type="reset" value="クリア" />
+            </div>
+            <div class="ui-block-b">
+              <input type="submit" value="登録" data-theme="a" />
+            </div>
+          </div><!-- .ui-grid-a -->
+        </div>
+      </form>
+      </div>
+    </div>
+  <!-- jQuery Mobile Listview __End__ -->
+</body>
+</html>

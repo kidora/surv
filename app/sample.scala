@@ -26,8 +26,10 @@ object Sample extends Controller {
     def gcgeoloc = html.gcgeocoder()
     def geotest = {
       val address = "福岡県福岡市中央区"
-      val rs = scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/json?address="+address+"&language=ja&sensor=false").mkString
-      scala.util.parsing.json.JSON.parseFull(rs)
+      // val rs = scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/json?address="+address+"&language=ja&sensor=false").mkString
+      //      scala.util.parsing.json.JSON.parseFull(rs)
+      val rs = scala.xml.XML.loadString(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/xml?address="+address+"&language=ja&sensor=false").mkString)
+      (rs \\ "location" \ "lng").text
     }
     
     def load = {
@@ -122,4 +124,101 @@ object Sample extends Controller {
     def vflick = html.vflick()
 
     def wktest = html.webkit()
+    
+    def jqm = html.jqm()
+    
+    def jqm_entry = {
+        val name    = params.get("name")
+        val address = params.get("address")
+        val tel     = params.get("tel")
+        val email   = params.get("email")
+        val rs = scala.xml.XML.loadString(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/xml?address="+address+"&language=ja&sensor=false").mkString)
+        val lat     = (rs \\ "location" \ "lat").text
+        val lng     = (rs \\ "location" \ "lng").text
+        val doc = MongoDBObject(
+              "name" -> name,
+              "address" -> address,
+              "tel" -> tel,
+              "email" -> email,
+              "lat" -> lat,
+              "lng" -> lng
+        )
+        _mongoConn("idex")("pos").save( doc )
+        Redirect("/surv/sample/jqm")
+    }
+
+    def jqmap = {
+        val lat = params.get("lat")
+        val lng = params.get("lng")
+        if ( lat==null || lat=="" || lng==null || lng=="" ) {
+          "usage :?lat=xxx&lng=yyy"
+        } else {
+          val latlng = lat+","+lng
+          // JSON
+          val rs = JSON.parse(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/json?latlng="+latlng+"&language=ja&sensor=false").mkString).asInstanceOf[DBObject]
+          val res = JSON.parse(rs.as[BasicDBList]("results").toList.head.toString).asInstanceOf[DBObject]
+          val rs2 = JSON.parse(res.as[BasicDBObject]("geometry").toString).asInstanceOf[DBObject]
+          val rs3 = JSON.parse(rs2.get("viewport").toString).asInstanceOf[DBObject]
+          val n_e = JSON.parse(rs3.get("northeast").toString).asInstanceOf[DBObject]
+          val s_w = JSON.parse(rs3.get("southwest").toString).asInstanceOf[DBObject]
+          // "ne: lat="+n_e.get("lat").toString+" lng="+n_e.get("lng").toString+" - sw: lat="+
+          // s_w.get("lat").toString+" lng="+s_w.get("lng").toString
+          
+          // XML
+          // val rs = scala.xml.XML.loadString(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/xml?latlng="+latlng+"&language=ja&sensor=false").mkString)
+          // rs
+          
+          val nelat = n_e.get("lat")
+          val nelng = n_e.get("lng")
+          val swlat = s_w.get("lat")
+          val swlng = s_w.get("lng")
+          "southweat lat:"+ swlat +" lng:"+ swlng +" northeast lat:"+ nelat +" lng:"+nelng
+        }
+    }
+
+    def jqm_get = {
+        val lat = params.get("lat")
+        val lng = params.get("lng")
+        val pnelat = params.get("nelat")
+        val pnelng = params.get("nelng")
+        val pswlat = params.get("swlat")
+        val pswlng = params.get("swlng")
+        val area = params.get("area")
+        val keyword = params.get("keyword")
+        var q = MongoDBObject.empty
+        if ( lat==null || lat=="" || lng==null || lng=="" ) {
+          if ( area != null && area != "" ) {
+            q = MongoDBObject("address"->MongoDBObject("$regex"->("[*"+area+"*]")))
+          }
+          if ( keyword != null && keyword != "" ) {
+            q = q ++ MongoDBObject("name"->MongoDBObject("$regex"->("[/*"+keyword+"*/]")))
+          }
+        } else if ( !(pnelat==null || pnelat=="" || pnelng==null || pnelng=="" &&  pswlat==null || pswlat=="" || pswlng==null || pswlng=="") ) {
+          val nelat = pnelat.toString
+          val nelng = pnelng.toString
+          val swlat = pswlat.toString
+          val swlng = pswlng.toString
+            q = MongoDBObject("lat"->MongoDBObject("$lt"->nelat, "$gt"->swlat), "lng"->MongoDBObject("$lt"->nelng, "$gt"->swlng))
+        } else {
+          val latlng = lat+","+lng
+          // JSON
+          val rs = JSON.parse(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/json?latlng="+latlng+"&language=ja&sensor=false").mkString).asInstanceOf[DBObject]
+          val res = JSON.parse(rs.as[BasicDBList]("results").toList.head.toString).asInstanceOf[DBObject]
+          val rs2 = JSON.parse(res.as[BasicDBObject]("geometry").toString).asInstanceOf[DBObject]
+          val rs3 = JSON.parse(rs2.get("viewport").toString).asInstanceOf[DBObject]
+          val n_e = JSON.parse(rs3.get("northeast").toString).asInstanceOf[DBObject]
+          val s_w = JSON.parse(rs3.get("southwest").toString).asInstanceOf[DBObject]
+          val nelat = n_e.get("lat").toString
+          val nelng = n_e.get("lng").toString
+          val swlat = s_w.get("lat").toString
+          val swlng = s_w.get("lng").toString
+            q = MongoDBObject("lat"->MongoDBObject("$lt"->nelat, "$gt"->swlat), "lng"->MongoDBObject("$lt"->nelng, "$gt"->swlng))
+        }
+        val o = MongoDBObject("_id" -> 0, "name" -> 1, "address" -> 1, "tel" -> 1, "email" -> 1, "lat" -> 1, "lng" -> 1)
+        /* OK *
+        val r = for(x <- _mongoConn("idex")("pos").find(q,o).toList) yield x
+          JSON.serialize(r)
+        * OK */
+        JSON.serialize(_mongoConn("idex")("pos").find(q,o).toList) /* これもOKそりゃそうだ */
+    }
 }
