@@ -63,6 +63,10 @@ GET     /surv/idexshaken                        Idex.shaken
 GET     /surv/idexflow                          Idex.flow
 GET     /surv/idexprice                         Idex.price
 
+# Bisiness suport
+GET     /surv/bizsupo                           Sample.jqm
+GET     /surv/bslogin                           Sample.bslogin
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

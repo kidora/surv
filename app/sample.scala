@@ -128,23 +128,27 @@ object Sample extends Controller {
     def jqm = html.jqm()
     
     def jqm_entry = {
+        val attr0   = params.get("attr0")
         val name    = params.get("name")
         val address = params.get("address")
         val tel     = params.get("tel")
         val email   = params.get("email")
+        val comment = params.get("comment")
         val rs = scala.xml.XML.loadString(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/xml?address="+address+"&language=ja&sensor=false").mkString)
         val lat     = (rs \\ "location" \ "lat").text
         val lng     = (rs \\ "location" \ "lng").text
         val doc = MongoDBObject(
+        "attr0" -> attr0,
               "name" -> name,
               "address" -> address,
               "tel" -> tel,
               "email" -> email,
+        "comment" -> comment,
               "lat" -> lat,
               "lng" -> lng
         )
         _mongoConn("idex")("pos").save( doc )
-        Redirect("/surv/sample/jqm")
+        Redirect("/surv/bizsupo#mappage")
     }
 
     def jqmap = {
@@ -220,5 +224,22 @@ object Sample extends Controller {
           JSON.serialize(r)
         * OK */
         JSON.serialize(_mongoConn("idex")("pos").find(q,o).toList) /* これもOKそりゃそうだ */
+    }
+        
+//    def bslogin = html.bslogin()
+    
+    def bshist = {
+        val user = params.get("user")
+        val name    = params.get("name")
+        val comment = params.get("comment")
+        val tmstamp = params.get("timestamp")
+        val doc = MongoDBObject(
+              "userid" -> user,
+              "name" -> name,
+              "comment" -> comment,
+              "timestamp" -> tmstamp
+        )
+        _mongoConn("idex")("history").save( doc )
+        Redirect("/surv/bizsupo#mappage")
     }
 }
