@@ -70,6 +70,7 @@ GET     /surv/bsmark                            Sample.jqm_get
 GET     /surv/bshist                            Sample.bsget_hist
 GET     /surv/bsadmin                           Sample.bsadmin
 POST    /surv/bsadmin                           Sample.bsupcsv
+GET     /surv/bshdtl                            Sample.bsget_hdtl
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

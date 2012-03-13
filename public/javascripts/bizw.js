@@ -281,13 +281,33 @@ $(function() {
             for (var j in json[i].comments) {
               cmtwk = cmtwk + json[i].comments[j].comment + "<br>";
             }
-            cmtwk = cmtwk + "</div>";
+            cmtwk = cmtwk + "<input id='btnDispDtl' name='"+json[i].name+"' type='button' value='詳細表示'></div>";
             $(marker).click(function(){
               $('#map_canvas').gmap('openInfoWindow', {'content': cmtwk}, this);
             });
           });
         }
     }
+    
+    $("#btnDispDtl").live("click", function(){
+      $.getJSON('/surv/bshdtl', {
+        'name': this.name
+      }, function(json){
+        var s = "";
+        $("#hlist_cont li").remove();
+        for (var i in json) {
+          s = s + "<li class='ui-li ui-li-static ui-body-c'><p class='ui-li-desc'>訪問目的："
+                + json[i].purpose
+                + "</p><p class='ui-li-desc'>内容要旨："
+                + json[i].overview
+                + "</p><p class='ui-li-desc'>詳細内容："
+                + json[i].comment
+                + "</p></li>";
+        }
+        $("#hlist_cont").append(s);
+        $.mobile.changePage('#hlist');
+      });
+    });
 
     // 検索
     $("#search").click(function() {

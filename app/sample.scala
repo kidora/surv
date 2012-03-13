@@ -243,11 +243,15 @@ object Sample extends Controller {
     def bshist = {
         val user = params.get("user")
         val name    = params.get("name")
+        val purpose = params.get("purpose")
+        val overview = params.get("overview")
         val comment = params.get("comment")
         val tmstamp = params.get("timestamp")
         val doc = MongoDBObject(
               "userid" -> user,
               "name" -> name,
+              "purpose" -> purpose,
+              "overview" -> overview,
               "comment" -> comment,
               "timestamp" -> tmstamp
         )
@@ -263,11 +267,19 @@ object Sample extends Controller {
         r <- _mongoConn("idex")("pos").find(qa,oa).toList
         Some(name: String) = r.getAs[String]("name")
         val q = MongoDBObject("name" -> name)
-        val o = MongoDBObject("_id" -> 0, "userid" -> 1, "name" -> 1, "comment" -> 1, "timestamp" -> 1)
+        val o = MongoDBObject("_id" -> 0, "userid" -> 1, "name" -> 1, "purpose" -> 1, "overview" -> 1,"comment" -> 1, "timestamp" -> 1)
         val comments = MongoDBObject("comments" -> _mongoConn("idex")("history").find(q,o).toList)
         val s = r ++ comments
       } yield s
-        JSON.serialize(x)
+      JSON.serialize(x)
+    }
+
+    // 訪問履歴詳細取得
+    def bsget_hdtl = {
+        val name    = params.get("name")
+        val q = MongoDBObject("name" -> name)
+        val o = MongoDBObject("_id" -> 0, "userid" -> 1, "name" -> 1, "purpose" -> 1, "overview" -> 1,"comment" -> 1, "timestamp" -> 1)
+        JSON.serialize(_mongoConn("idex")("history").find(q,o).toList)
     }
 
     // 営業支援ツール管理画面

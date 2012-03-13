@@ -185,13 +185,27 @@
       <form action="@action(controllers.Sample.bshist)" method="post" data-ajax="false">
           <label for="name">名　称</label>
           <input id="name" name="name" type="text" placeholder="名称" />
-          <label for="comment">コメント</label>
+          <label for="purpose">訪問目的</label>
+          <textarea id="purpose" name="purpose" placeholder="purpose"></textarea>
+          <label for="overview">内容要旨</label>
+          <textarea id="overview" name="overview" placeholder="overview"></textarea>
+          <label for="comment">詳細内容(ヒヤリング事項等)</label>
           <textarea id="comment" name="comment" placeholder="comment"></textarea>
           <input id="user" name="user" type="hidden" />
           <input id="timestamp" name="timestamp" type="hidden" />
           <input type="submit" id="hist_submit" data-theme="" value="履歴登録"/>
       </form>
     </div>
-  </div><!-- #history/page>
+  </div><!-- #history/page -->
+  <div data-role="page" id="hlist">
+    <header data-role="header" data-theme="b">
+      <h1>訪問履歴詳細</h1>
+      <a href="#mappage" data-icon="arrow-l">戻る</a>
+    </header>
+    <div data-role="content" data-theme="c">
+      <ul data-role="listview" data-theme="c" id="hlist_cont">
+      </ul>
+    </div>
+  </div><!-- #hlist/page -->
 </body>
 </html>
