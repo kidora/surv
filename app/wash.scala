@@ -221,4 +221,6 @@ object Wash extends Controller {
         html.washclient(mode,ip,List[(String)](),c("cont").toString)
       }
     }
+    
+    def demo = html.washdemo()
 }

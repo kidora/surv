@@ -1,0 +1,16 @@
+@(msg:String="")
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理画面</title>
+</head>
+<body>
+  <p>CSVファイルで位置情報を登録します。</p>
+  <p>フォーマット: No,カテゴリ,名称,住所,電話番号,メールアドレス,コメント</p>
+  <form action="/surv/bsadmin" method="post" enctype="multipart/form-data">
+    <input type="file" id="file" name="file" />
+    <input type="submit" name="btnupload" value="ファイルアップロード">
+  </form>
+  <p style="color: red;"><b>@msg</b></p>
+</body>
+</html>

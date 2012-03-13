@@ -6,6 +6,10 @@ import com.mongodb.casbah.gridfs.Imports._
 import com.mongodb.casbah.Imports._
 import com.mongodb.util.JSON
 import scala.collection.JavaConverters._
+// Open CSV
+import au.com.bytecode.opencsv.CSVReader
+import java.io.FileReader
+import java.io.File
 
 object Sample extends Controller {
 
@@ -223,10 +227,18 @@ object Sample extends Controller {
         val r = for(x <- _mongoConn("idex")("pos").find(q,o).toList) yield x
           JSON.serialize(r)
         * OK */
-        JSON.serialize(_mongoConn("idex")("pos").find(q,o).toList) /* これもOKそりゃそうだ */
+        // JSON.serialize(_mongoConn("idex")("pos").find(q,o).toList) /* これもOKそりゃそうだ */
+        // 履歴の取得を追加
+        val x = for {
+          r <- _mongoConn("idex")("pos").find(q,o).toList
+          Some(name: String) = r.getAs[String]("name")
+          val hq = MongoDBObject("name" -> name)
+          val ho = MongoDBObject("_id" -> 0, "userid" -> 1, "name" -> 1, "comment" -> 1, "timestamp" -> 1)
+          val comments = MongoDBObject("comments" -> _mongoConn("idex")("history").find(hq,ho).toList)
+          val s = r ++ comments
+        } yield s
+        JSON.serialize(x)
     }
-        
-//    def bslogin = html.bslogin()
     
     def bshist = {
         val user = params.get("user")
@@ -241,5 +253,85 @@ object Sample extends Controller {
         )
         _mongoConn("idex")("history").save( doc )
         Redirect("/surv/bizsupo#mappage")
+    }
+
+    // 訪問履歴取得
+    def bsget_hist = {
+      val qa = MongoDBObject.empty
+      val oa = MongoDBObject("_id" -> 0, "name" -> 1, "address" -> 1, "tel" -> 1, "email" -> 1, "lat" -> 1, "lng" -> 1)
+      val x = for {
+        r <- _mongoConn("idex")("pos").find(qa,oa).toList
+        Some(name: String) = r.getAs[String]("name")
+        val q = MongoDBObject("name" -> name)
+        val o = MongoDBObject("_id" -> 0, "userid" -> 1, "name" -> 1, "comment" -> 1, "timestamp" -> 1)
+        val comments = MongoDBObject("comments" -> _mongoConn("idex")("history").find(q,o).toList)
+        val s = r ++ comments
+      } yield s
+        JSON.serialize(x)
+    }
+
+    // 営業支援ツール管理画面
+    def bsadmin(msg: String="") = html.bsadmin(msg)
+    
+    import java.io.Closeable
+    import java.io.Reader
+    import java.io.FileInputStream
+    import models._
+    
+class ScalaCSVReader(reader: Reader) extends Iterator[Array[String]] with Closeable {
+    require(reader != null)
+    private val csv = new CSVReader(reader)
+    private var nextRow = csv.readNext
+    override def hasNext = nextRow != null
+    override def next = try { nextRow } finally { nextRow = csv.readNext }
+    override def close { csv.close }
+}
+
+    def bsupcsv(file: File) = {
+      // title
+      // if (photo!=null) "nothing" else "exist"
+      // photo.getName()
+      // Play.applicationPath.getPath+"/public/images/"+photo.getName()
+            // val saveTo = new File(Play.applicationPath.getPath+"/public/images/"+photo.getName());
+            // photo.renameTo(saveTo);
+            // saveTo
+      // val logo = new FileInputStream(file)
+      // logo
+      // file.getPath()
+      // val reader = new CSVReader(new FileReader(file.getPath()))
+      // val res = Iterator.continually(reader.readNext).takeWhile(_ != null).foreach {r =>
+        // r(0) + " : " + r(2) + "<br>"
+      // }
+        // res
+        // Iterator.continually(reader.readNext).takeWhile(_ != null).map(_.toList)
+      // for (row <- reader.readNext) println(row)
+      val reader = new ScalaCSVReader(new FileReader(file.getPath()))
+      val rows: List[Array[String]] = try { reader.toList } finally { reader.close }
+      for (r <- rows) {
+        val cat = r(1)
+        val name = r(2)
+        val address = r(3)
+        val tel     = r(4)
+        val email   = r(5)
+        val comment = r(6)
+        val ggc = JSON.parse(scala.io.Source.fromURL("http://maps.google.com/maps/api/geocode/json?address="+address++"&language=ja&sensor=false").mkString).asInstanceOf[DBObject]
+        val res = JSON.parse(ggc.as[BasicDBList]("results").toList.head.toString).asInstanceOf[DBObject]
+        val geo = JSON.parse(res.as[BasicDBObject]("geometry").toString).asInstanceOf[DBObject]
+        val loc = JSON.parse(geo.get("location").toString).asInstanceOf[DBObject]
+        val lat = loc.get("lat")
+        val lng = loc.get("lng")
+        val doc = MongoDBObject(
+              "cat" -> cat,
+              "name" -> name,
+              "address" -> address,
+              "tel" -> tel,
+              "email" -> email,
+              "comment" -> comment,
+              "lat" -> lat,
+              "lng" -> lng
+        )
+        _mongoConn("idex")("pos").save( doc )
+      }
+      bsadmin("位置情報の登録が完了しました。")
     }
 }
